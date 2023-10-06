@@ -18,6 +18,25 @@ const CalendarComponent = ({ onSave }) => {
   const [entryData, setEntryData] = useState({});
   const [goal, setGoal] = useState(100); // Define your weekly goal here
   const [categoryName, setCategoryName] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+  
+  useEffect(() => {
+    if (AuthService.loggedIn()) {
+      // Get the user's profile data from the JWT token
+      const userProfile = AuthService.getProfile();
+
+      // Access the username
+      const username = userProfile.username;
+
+      // Update the userProfile state
+      setUserProfile(userProfile);
+      console.log('User Profile:', userProfile);
+      console.log('userProfile.data._id:', userProfile.data._id);
+    } else {
+      // User is not logged in
+      console.log('User is not logged in');
+    }
+  }, []);
 
 
   const { categoryId } = useParams(); // Extract categoryId from URL
