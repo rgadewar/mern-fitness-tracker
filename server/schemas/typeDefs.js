@@ -1,23 +1,53 @@
 const typeDefs = `
-type Profile {
+type User {
   _id: ID
   name: String
-  skills: [String]!
+  email: String
+  password: String
+  activities: [Activity]!
 }
 
-  # The Query type is built-in to GraphQL, so we only need to extend it to include which kinds of information we plan to request in our application
-  # Important for useQuery: We define our Query type to inform our entry points
-  type Query {
-    profiles: [Profile]!
-    profile(profileId: ID!): Profile
-  }
+type Auth {
+  token: ID!
+  user: User
+}
 
-  type Mutation {
-    addProfile(name: String!): Profile
-    addSkill(profileId: ID!, skill: String!): Profile
-    removeProfile(profileId: ID!): Profile
-    removeSkill(profileId: ID!, skill: String!): Profile
-  }
+type Activity {
+  _id: ID!
+  name: String!
+  goal: Float!
+  dailyAchievements: [DailyAchievement]!
+  user: User!
+}
+type UpdateDailyAchievementResponse {
+  message: String
+  success: Boolean
+}
+
+type DailyAchievement {
+  date: String!
+  value: Float!
+}
+
+type Category {
+  _id: ID!
+  name: String!
+}
+type Query {
+  users: [User]!
+  user(userId: ID!): User
+  activities: [Activity]!  # Add this line to define the 'activities' query
+  categories: [Category]!
+  getCategoryName(categoryId: ID!): String
+  me: User
+}
+
+type Mutation {
+  addUser(name: String!, email: String!, password: String!): Auth
+  login(email: String!, password: String!): Auth
+  removeUser(userId: ID!): User
+  updateDailyAchievement(categoryId: ID!, date: String!, value: Float!): UpdateDailyAchievementResponse
+}
 `;
 
 module.exports = typeDefs;
