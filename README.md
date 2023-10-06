@@ -1,4 +1,4 @@
-# User Experience:
+# *Track* User Experience:
 When a user visits the site they are prompted to *Login* or *Create an Account*.
 
 Once a user has logged in, they are prompted to *Create* a new goal or *View* an existing goal.
