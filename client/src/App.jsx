@@ -40,7 +40,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <UserProvider> Wrap your entire app with UserProvider
+      <UserProvider> 
         <ActivityProvider> {/* Wrap your entire app with ActivityProvider */}
           <div className="flex-column justify-flex-start min-100-vh">
             <Header />

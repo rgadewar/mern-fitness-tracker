@@ -20,6 +20,7 @@ const activitySchema = new mongoose.Schema({
         default: 0,
       },
     },
+    
   ],
   user: {
     type: mongoose.Schema.Types.ObjectId,

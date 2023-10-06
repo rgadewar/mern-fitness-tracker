@@ -46,7 +46,14 @@ type Mutation {
   addUser(name: String!, email: String!, password: String!): Auth
   login(email: String!, password: String!): Auth
   removeUser(userId: ID!): User
-  updateDailyAchievement(categoryId: ID!, date: String!, value: Float!): UpdateDailyAchievementResponse
+  
+    updateDailyAchievement(
+      name: String!
+      date: String!
+      value: Float!
+      userId: ID!
+    ): UpdateDailyAchievementResponse
+  
 }
 `;
 

@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // Import Calendar styles
 // import './CalendarComponent.css'; // Import your custom CSS file
 import { useMutation } from '@apollo/client';
 import { UPDATE_DAILY_ACHIEVEMENT } from '../utils/mutations'; // Import the mutation
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES } from '../utils/queries';
+import AuthService from '../utils/auth';
+
+
 
 const CalendarComponent = ({ onSave }) => {
   const [date, setDate] = useState(new Date());
@@ -12,10 +17,24 @@ const CalendarComponent = ({ onSave }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [entryData, setEntryData] = useState({});
   const [goal, setGoal] = useState(100); // Define your weekly goal here
+  const [categoryName, setCategoryName] = useState('');
+
 
   const { categoryId } = useParams(); // Extract categoryId from URL
 
   const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
+   // Fetch categories using the useQuery hook
+   const { data, loading, error } = useQuery(GET_CATEGORIES);
+  useEffect(() => {
+    // Check if data is available before using it
+    if (!loading && !error && data) {
+      const category = data.categories.find((cat) => cat._id === categoryId);
+  
+      if (category) {
+        setCategoryName(category.name);
+      }
+    }
+  }, [categoryId, data, loading, error]);
 
   const handleDateChange = (newDate) => {
     setDate(newDate);
@@ -43,15 +62,20 @@ const handleSave = async () => {
     );
 
     if (selectedDate >= firstDayOfWeek && selectedDate <= lastDayOfWeek) {
+      if (!AuthService.loggedIn()) {
+        console.error('User not authenticated.');
+        return;
+      }
       try {
         const response = await updateDailyAchievement({
           variables: {
-            categoryId: categoryId,
+            name: categoryName, // Include categoryName in the variables
             date: selectedDate.toISOString(),
             value: parseFloat(value),
+            userId: userProfile.data._id, // Provide the user's ID here
           },
         });
-
+        console.log('Received response:', response);
         if (response.data && response.data.updateDailyAchievement) {
           const updatedEntryData = { ...entryData };
           updatedEntryData[selectedDate.toDateString()] = {
