@@ -1,0 +1,33 @@
+/* Slideshow container */
+.slideshow {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Individual slides */
+  .slide {
+    display: none;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .slide.active {
+    display: block;
+  }
+  
+  .slide img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+  }
+  
