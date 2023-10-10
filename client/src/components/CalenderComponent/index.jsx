@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import Calendar from 'react-calendar';
 import { useReducer } from 'react';
 
 const CalendarComponent = ({ onSave }) => {
-  const [date, setDate] = useState(new Date());
-  const [value, setValue] = useState('');
+  const [date, setDate] = useReducer(new Date());
+  const [value, setValue] = useReducer('');
 
   const handleDateChange = (newDate) => {
     setDate(newDate);
