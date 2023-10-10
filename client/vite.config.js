@@ -19,7 +19,7 @@ export default defineConfig({
       // Your rollup options here
       input: 'src/main.jsx',
       // Specify external dependencies here
-      external: ['react', 'react-dom', 'redux'],
+      external: ['react', 'react-dom', 'redux', 'react-redux'],
     },
     outDir: 'dist', // Specify the output directory for the build
   },
