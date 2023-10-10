@@ -18,10 +18,10 @@ export default defineConfig({
     rollupOptions: {
       // Your rollup options here
       input: 'src/main.jsx',
+      // Specify external dependencies here
+      external: ['react', 'react-dom', 'react-redux'],
     },
     outDir: 'dist', // Specify the output directory for the build
-
-    
   },
   serviceWorker: {
     src: 'serviceWorker.js',
