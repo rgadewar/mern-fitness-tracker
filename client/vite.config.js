@@ -19,9 +19,12 @@ export default defineConfig({
       // Your rollup options here
       input: 'src/main.jsx',
     },
+    outDir: 'dist', // Specify the output directory for the build
+
+    
   },
   serviceWorker: {
-    src: 'serviceWorker.js', // Path to your service worker file
+    src: 'serviceWorker.js',
     // Other service worker options go here
   },
 });
