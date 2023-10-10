@@ -22,8 +22,8 @@ const activityReducer = (state, action) => {
       return { ...state, weekGoal: action.payload };
     case SET_DAILY_PROGRESS:
       return { ...state, dailyProgress: action.payload };
-    case SET_TABLE_DATA:
-      return { ...state, tableData: action.payload };
+    // case SET_TABLE_DATA:
+    //   return { ...state, tableData: action.payload };
     default:
       return state;
   }

@@ -1,40 +1,233 @@
-import React, { useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import { useReducer } from 'react';
+import 'react-calendar/dist/Calendar.css';
 
-const CalendarComponent = ({ onSave }) => {
-  const [date, setDate] = useReducer(new Date());
-  const [value, setValue] = useReducer('');
+import './CalenderComponent.css'; // Import the CSS file
+import { useMutation } from '@apollo/client';
+import { UPDATE_DAILY_ACHIEVEMENT } from '../../utils/mutations';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES, GET_WEEKLY_PROGRESS } from '../../utils/queries';
+import AuthService from '../../utils/auth';
+// import { useGlobalState } from '../../utils/userContext'; // Import useGlobalState from your global state context
+import { useDispatch, useSelector } from 'react-redux';
+import { updateWeeklyProgress, updateActivity } from '../../Reducers/actions'; // Import your Redux action
 
+
+const CalendarComponent = ({ onSave, name }) => {
+  const [date, setDate] = useState(new Date());
+  const [value, setValue] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [entryData, setEntryData] = useState({});
+  const [goal, setGoal] = useState(100); // Initialize goal with 0
+  const [categoryName, setCategoryName] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+
+  useEffect(() => {
+    if (AuthService.loggedIn()) {
+      const userProfile = AuthService.getProfile();
+      setUserProfile(userProfile);
+    } else {
+      console.log('User is not logged in');
+    }
+  }, []);
+
+  const { categoryId } = useParams();
+  const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
+
+  const { data, loading, error } = useQuery(GET_CATEGORIES); 
+
+  const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
+    variables: { userId: userProfile?.data._id, name: name}, // Use optional chaining to prevent null error
+  });
+
+  useEffect(() => {
+    if (!loading && !error && data) {
+      const category = data.categories.find((cat) => cat._id === categoryId);
+
+      if (category) {
+        setCategoryName(category.name);
+      }
+    }
+  }, [categoryId, data, loading, error]);
+
+  const state = useSelector((state) => {
+    return state
+  });
+
+  const dispatch = useDispatch();
+  const weekGoal = state.weekGoal || 0;
+  const initialWeeklyProgress = state.initialWeeklyProgress || 0; // Use the initialWeeklyProgress from the global state
+  const activities = state.activities || []; // Get activities from the Redux state
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
-
+  console.log("weekGoal*******", weekGoal)
   const handleValueChange = (e) => {
     setValue(e.target.value);
   };
 
-  const handleSave = () => {
-    onSave({ date, value });
-    setDate(new Date());
-    setValue('');
+  const handleSave = async () => {
+    if (selectedDate) {
+      const currentDate = new Date();
+      const firstDayOfWeek = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - currentDate.getDay()
+      );
+      const lastDayOfWeek = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + (6 - currentDate.getDay())
+      );
+  
+      if (selectedDate >= firstDayOfWeek && selectedDate <= lastDayOfWeek) {
+        if (!AuthService.loggedIn()) {
+          console.error('User not authenticated.');
+          return;
+        }
+        try {
+          const response = await updateDailyAchievement({
+            variables: {
+              name: categoryName, // Include categoryName in the variables
+              date: selectedDate.toISOString(),
+              value: parseFloat(value),
+              userId: userProfile.data._id, // Provide the user's ID here
+            },
+          });
+          if (response.data && response.data.updateDailyAchievement) {
+            // Update the progress bar by adding the newly added value
+            const updatedWeeklyProgress =
+              parseFloat( ) + parseFloat(value);
+  
+            const updatedEntryData = { ...entryData };
+            updatedEntryData[selectedDate.toDateString()] = {
+              progress: value,
+            };
+            setEntryData(updatedEntryData);
+  
+            onSave({ date: selectedDate, value: parseFloat(value) });
+            setDate(new Date());
+            setValue('');
+            setSelectedDate(null);
+  
+            // Push the new daily achievement to the dailyAchievements array
+              const newDailyAchievement = {
+                date: new Date(selectedDate.toDateString()),
+                value: parseFloat(value),
+                name: categoryName,
+              };
+    
+            // Dispatch the action with just the 'value' as the payload
+            dispatch(updateActivity(newDailyAchievement));
+            dispatch({
+              type: 'UPDATE_WEEKLY_PROGRESS',
+              payload: parseFloat(value),
+            });
+
+          } else {
+            console.error(
+              'Daily achievement update failed:',
+              response.data?.updateDailyAchievement?.message
+            );
+          }
+        } catch (error) {
+          console.error(
+            'An error occurred while updating daily achievement:',
+            error
+          );
+        }
+      } else {
+        console.error('Selected date is not within the current week.');
+      }
+    } else {
+      console.error('Selected date is not defined.');
+    }
+  };
+  
+  
+  const handleSelectDate = (date) => {
+    setSelectedDate(date);
+    setValue(entryData[date.toDateString()]?.progress || '');
+  };
+
+  const calculateWeeklyProgress = () => {
+    let weeklyTotal = parseFloat(initialWeeklyProgress);
+    for (const date in entryData) {
+      weeklyTotal += parseFloat(entryData[date].progress) || 0;
+    }
+    return weeklyTotal;
+  };
+
+  const weeklyProgress = calculateWeeklyProgress();
+
+  const tileClassName = ({ date, view }) => {
+    if (view === 'month') {
+      const currentDate = new Date();
+      const firstDayOfWeek = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - currentDate.getDay()
+      );
+      const lastDayOfWeek = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + (6 - currentDate.getDay())
+      );
+
+      if (date >= firstDayOfWeek && date <= lastDayOfWeek) {
+        return 'highlighted-week';
+      }
+    }
+    return '';
   };
 
   return (
     <div>
-      <h2>Calendar</h2>
-      <div>
-        <Calendar onChange={handleDateChange} value={date} />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter value"
-          value={value}
-          onChange={handleValueChange}
-        />
-        <button onClick={handleSave}>Save</button>
-      </div>
+      {userProfile ? ( // Check if userProfile is available
+        <div>
+          <h2>Calendar</h2>
+          <div>
+            <Calendar
+              onChange={handleDateChange}
+              value={date}
+              onClickDay={handleSelectDate}
+              tileContent={({ date }) => {
+                return <div>{/* You can add content here */}</div>;
+              }}
+              tileClassName={tileClassName}
+            />
+          </div>
+          <div>
+            {selectedDate && (
+              <div>
+                <p>Selected Date: {selectedDate.toLocaleDateString()}</p>
+                <input
+                  type="text"
+                  placeholder="Enter value"
+                  value={value}
+                  onChange={handleValueChange}
+                />
+                <button
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+              </div>
+            )}
+          </div>
+          <div>
+            <h3>Weekly Progress</h3>
+            <div>
+              <p>Goal: {weekGoal}</p>
+              <p>Your Progress: {state.weeklyProgress}</p>
+              <progress max={weekGoal} value={state.weeklyProgress} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p>Loading user profile...</p>
+      )}
     </div>
   );
 };

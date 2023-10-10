@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Slideshow.css'; // Import the CSS file
+import './Slideshow1.css'; // Import the CSS file
 
 
 const Slideshow = ({ slides }) => {
@@ -31,5 +31,7 @@ const Slideshow = ({ slides }) => {
     </div>
   );
 };
+
+
 
 export default Slideshow;

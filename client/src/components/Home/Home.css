@@ -1,0 +1,37 @@
+/* Add some spacing to the container */
+.home-container {
+    margin: 40px;
+  }
+  
+  /* Style the label */
+  .category-selection label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  /* Style the dropdown select element */
+  #categoryDropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  /* Style dropdown options */
+  #categoryDropdown option {
+    font-size: 14px;
+  }
+  
+  /* Style the category list container */
+  .category-list {
+    margin-top: 20px;
+  }
+  
+  /* Style loading and no categories messages */
+  .loading-message,
+  .no-categories-message {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  

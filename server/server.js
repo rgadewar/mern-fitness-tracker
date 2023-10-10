@@ -7,11 +7,16 @@ const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    // Use authMiddleware to populate context.user
+    const user = authMiddleware({ req });
+    return { user };
+  }
 });
 
 // Create a new instance of an Apollo server with the GraphQL schema
