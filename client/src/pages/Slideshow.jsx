@@ -1,6 +1,8 @@
 import React from 'react';
 import Slideshow from '../components/Slideshow';
 
+import { GetDailyAchievements } from '../utils/queries.js';
+
 const slides = [
   {
     image: '/assets/download.jpeg',
@@ -19,10 +21,20 @@ const slides = [
   }
   
 ];
+ 
 
 function SlideshowPage() {
+  // const [userProfile, setUserProfile] = useState(null);
+
   return (
     <div className="App">
+      {/* {userProfile ? (
+        <h1>Welcome, {userProfile.data._id}</h1>
+      ) : (
+        <h1>Welcome!</h1>
+      )}
+      */}
+
       <Slideshow slides={slides} />
     </div>
   );

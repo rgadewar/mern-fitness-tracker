@@ -1,0 +1,18 @@
+/* DatePickerComponent.module.css */
+
+.date-picker-container {
+    margin-bottom: 20px;
+  }
+  
+  .date-picker-label {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .date-picker-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
