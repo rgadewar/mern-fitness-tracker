@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Auth from '../../utils/auth';
 import logoImage from '/assets/logo1.png';
+import Box from '@mui/material/Box';
+
 
 const Header = () => {
   const logout = (event) => {
@@ -10,6 +12,17 @@ const Header = () => {
   };
 
   return (
+    <Box
+    sx={{
+      width: 1000,
+      height: 1000,
+      backgroundColor: 'primary.dark',
+      '&:hover': {
+        backgroundColor: 'primary.main',
+        opacity: [0.9, 0.8, 0.7],
+      },
+    }}
+  > 
     <header className="bg-info text-dark mb-4 py-3 display-flex align-center">
       <div className="container flex-column justify-space-between-lg justify-center align-center text-center">
         <Link className="text-dark text-decoration-none d-flex align-center" to="/">
@@ -54,6 +67,7 @@ const Header = () => {
         </div>
       </div>
     </header>
+    </Box>
   );
 };
 
