@@ -1,5 +1,7 @@
 const { User, Activity, Category } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
+const { getWeeklyProgress } = require('../utils/weeklyProgress');
+
 
 const resolvers = {
   Query: {
@@ -26,6 +28,18 @@ const resolvers = {
         throw new Error("Failed to fetch activities");
       }
     },
+    activityByUserId: async (_, { userId }) => {
+      try {
+        const activity = await Activity.findOne({ user: userId });
+        if (activity) {
+          return activity;
+        } else {
+          throw new Error('Activity not found');
+        }
+      } catch (error) {
+        throw new Error(`Error fetching activity: ${error.message}`);
+      }
+    },
 
     categories: async () => {
       try {
@@ -48,6 +62,74 @@ const resolvers = {
         throw new Error('Error fetching category name');
       }
     },
+
+    weeklyProgress: async (parent, args, context) => {
+      // Ensure the user is authenticated (you can use your authentication middleware here)
+      if (!context.user) {
+        throw new AuthenticationError('User not authenticated');
+      }
+
+      try {
+        const userId = args.userId;
+        const activityName = args.name;
+
+        // Call the getWeeklyProgress function to calculate the weekly progress
+        const weeklyProgress = await getWeeklyProgress(userId, activityName);
+        console.log("weeklyProgress", weeklyProgress)
+
+        return weeklyProgress;
+      } catch (error) {
+        throw new Error('Error fetching weekly progress: ' + error.message);
+      }
+    },
+
+    getDailyAchievements: async (parent, { name, startDate, endDate }) => {
+      try {
+        const activities = await Activity.find({ name }); // Find activities with the specified name
+    
+        if (!activities || activities.length === 0) {
+          throw new Error('No activities found with the provided name');
+        }
+    
+        const filteredAchievements = [];
+        
+        activities.forEach(activity => {
+          const achievements = activity.dailyAchievements.filter(achievement => {
+            const achievementDate = new Date(achievement.date);
+            return achievementDate >= new Date(startDate) && achievementDate <= new Date(endDate);
+          });
+    
+          // Convert Unix timestamps to "YYYY-MM-DD" format
+          const formattedAchievements = achievements.map(achievement => ({
+            date: new Date(achievement.date).toISOString().split('T')[0],
+            value: achievement.value,
+          }));
+    
+          filteredAchievements.push(...formattedAchievements);
+        });
+    
+        return filteredAchievements;
+      } catch (error) {
+        console.error('Error fetching daily achievements:', error);
+        throw new Error('Server error');
+      }
+    },
+    
+    
+    activityIdByName: async (_, { name }) => {
+      try {
+        // Find the activity by its name and return its ID
+        const activity = await Activity.findOne({ name });
+        if (activity) {
+          return activity._id;
+        } else {
+          throw new Error('Activity not found');
+        }
+      } catch (error) {
+        throw new Error(`Error fetching activity ID by name: ${error.message}`);
+      }
+    },
+
     
   },
 
@@ -80,119 +162,104 @@ const resolvers = {
       return User.findOneAndDelete({ _id: userId });
     },
 
-    // updateDailyAchievement: async (parent, args, context) => {
-    //   try {
-    //     // Check if the user is authenticated (You may have a different authentication mechanism)
-    //     console.log("const user = context.user;", context.user)
-    //     if (!context.user) {
-    //       throw AuthenticationError("User not authenticated");
-    //     }
-    
-    //     // Extract relevant variables from the args
-    //     const { categoryId, date, value } = args;
-    
-    //     // Find the category with the provided ID
-    //     const category = await Category.findById(categoryId);
-    
-    //     if (!category) {
-    //       throw Error("Category not found");
-    //     }
-    
-    //     // Check if the user owns the category (assuming there's a user ID associated with the category)
-    //     if (category.user.toString() !== context.user._id.toString()) {
-    //       throw AuthenticationError(
-    //         "You do not have permission to update achievements in this category"
-    //       );
-    //     }
-    
-    //     // Find or create the daily achievement for the specified date within the category
-    //     const dailyAchievement = category.dailyAchievements.find(
-    //       (achievement) => achievement.date.toISOString() === date
-    //     );
-    
-    //     if (!dailyAchievement) {
-    //       // If not found, create a new daily achievement
-    //       category.dailyAchievements.push({
-    //         date: new Date(date),
-    //         value,
-    //       });
-    //     } else {
-    //       // If found, update the existing daily achievement
-    //       dailyAchievement.value = value;
-    //     }
-    
-    //     // Save the updated category
-    //     await category.save();
-    
-    //     return {
-    //       success: true,
-    //       message: "Daily achievement updated successfully",
-    //     };
-    //   } catch (error) {
-    //     // Handle errors and return an appropriate response
-    //     return {
-    //       success: false,
-    //       message: error.message, // You can customize the error message here
-    //     };
-    //   }
-    // },
     updateDailyAchievement: async (parent, args, context) => {
+      console.log(context);
+    
+      if (!context.user) {
+        throw new AuthenticationError('Not logged in');
+      }
+    
       try {
-        // Check if the user is authenticated in the context
-        if (!context.user) {
+        const { name, date, value, _id } = args;
+    
+        if (!name) {
           return {
             success: false,
-            message: "User not authenticated",
+            message: 'Name is required',
           };
         }
     
-        const { name, date, value } = args;
-    
-        // Find the activity with the provided name
-        let activity = await Activity.findOne({ name: name });
+        let activity = await Activity.findById(_id);
     
         if (!activity) {
-          // If the activity doesn't exist, create a new one
-          activity = new Activity({
-            name: name,
-            goal: 0, // Set an initial goal if needed
-            user: context.user.id, // Set the user ID from the context
+          activity = await Activity.findOne({
+            name,
+            user: context.user._id,
           });
+    
+          if (!activity) {
+            activity = new Activity({
+              name: name,
+              goal: 0,
+              user: context.user._id,
+            });
+    
+            console.log(`Created a new activity: ${activity.name} for user ID ${context.user._id}`);
+          }
         }
     
-        // Find or create the daily achievement for the specified date within the activity
-        const dailyAchievement = activity.dailyAchievements.find(
+        const existingAchievement = activity.dailyAchievements.find(
           (achievement) => achievement.date.toISOString() === date
         );
     
-        if (!dailyAchievement) {
-          // If not found, create a new daily achievement
+        if (!existingAchievement) {
           activity.dailyAchievements.push({
             date: new Date(date),
             value,
+            name: name,
           });
+    
+          console.log('Created a new daily achievement:', date);
         } else {
-          // If found, update the existing daily achievement
-          dailyAchievement.value = value;
+          existingAchievement.value = value;
+          console.log('Updated daily achievement:', date);
         }
     
-        // Save the updated activity (which may be a new one)
-        await activity.save();
+        activity.user = context.user._id;
+    
+        const savedActivity = await activity.save();
+    
+        console.log('Activity saved successfully:', savedActivity);
     
         return {
           success: true,
-          message: "Daily achievement updated successfully",
+          message: 'Daily achievement updated successfully',
         };
       } catch (error) {
-        // Handle errors and return an appropriate response
+        console.error('Error updating daily achievement:', error);
         return {
           success: false,
-          message: error.message, // You can customize the error message here
+          message: 'Error updating daily achievement',
         };
       }
     },
     
+    setGoal: async (_, { activityId, goal }) => {
+      try {
+        // Find the activity by its ID and update the "goal" field
+        const updatedActivity = await Activity.findOneAndUpdate(
+          { _id: activityId },
+          { $set: { goal: goal } }, // Use an object to specify the field and its new value
+          { new: true }
+        );
+    
+        if (!updatedActivity) {
+          throw new Error('Activity not found');
+        }
+    
+        return updatedActivity;
+      } catch (error) {
+        throw new Error(`Error setting goal: ${error.message}`);
+      }
+    },
+    
+
+
   },
 };
+
+
+
+
 
 module.exports = resolvers;

@@ -1,0 +1,91 @@
+/* CalendarComponent.css */
+
+/* Overall container styling */
+.CalendarComponent {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading styles */
+  .CalendarComponent h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  /* Calendar container */
+  .CalendarContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  
+  /* Selected date display */
+  .SelectedDate {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Input and button container */
+  .InputContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Input field styling */
+  .InputField {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Save button styling */
+  .SaveButton {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  /* Weekly progress container */
+  .WeeklyProgressContainer {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  
+  /* Goal and progress display */
+  .GoalProgressDisplay {
+    margin-bottom: 10px;
+  }
+  
+  /* Progress bar styling */
+  .ProgressBar {
+    width: 100%;
+  }
+  
+  /* Highlighted week styles */
+  .highlighted-week {
+    background-color: #e0f7fa;
+    border-radius: 50%;
+  }
+  
+  
+  
+  
+  
+  
+  

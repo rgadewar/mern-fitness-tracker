@@ -20,33 +20,6 @@ export const QUERY_SINGLE_USER = gql`
   }
 `;
 
-export const GET_BIKES = gql`
-  query GetBikes {
-    bikes {
-      _id
-      name
-      price
-      rating
-      image
-      details {
-        capacity
-        productInfo
-      }
-    }
-  }
-`;
-
-export const QUERY_SINGLE_BIKE = gql`
-query singleBike($bikeId: ID!) {
-  bike(_id: $bikeId) {
-    _id
-    rating
-    price
-    name
-    image
-  }
-}
-`;
 
 export const GET_CATEGORIES = gql`
   query GetCategories {
@@ -55,4 +28,25 @@ export const GET_CATEGORIES = gql`
       name
     }
   }
+`;
+
+
+export const GET_WEEKLY_PROGRESS = gql`
+query Query($userId: ID!, $name: String!) {
+  weeklyProgress(userId: $userId, name: $name)
+}
+`;
+
+export const GetDailyAchievements = gql`
+query GetDailyAchievements($name: String!, $startDate: String!, $endDate: String!) {
+  getDailyAchievements(name: $name, startDate: $startDate, endDate: $endDate) {
+    date
+    value
+  }
+}
+`;
+export const GET_ACTIVITY_ID_BY_NAME = gql`
+query activityIdByName($name: String!) {
+  activityIdByName(name: $name)
+}
 `;

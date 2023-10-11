@@ -19,6 +19,10 @@ const activitySchema = new mongoose.Schema({
         type: Number,
         default: 0,
       },
+      name: {
+        type: String, // Use the 'name' field as the category name
+        required: true,
+      },
     },
     
   ],

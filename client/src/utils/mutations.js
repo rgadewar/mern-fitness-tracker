@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-// ... (your existing mutations)
-
 export const ADD_USER = gql`
   mutation addUser($name: String!, $email: String!, $password: String!) {
     addUser(name: $name, email: $email, password: $password) {
@@ -34,6 +32,14 @@ mutation UpdateDailyAchievement($name: String!, $date: String!, $value: Float!, 
   }
 }
 
-
 `;
 
+export const SET_GOAL_MUTATION = gql`
+mutation SetGoal($activityId: ID!, $goal: Int!) {
+  setGoal(activityId: $activityId, goal: $goal) {
+    goal
+    _id
+    name
+  }
+}
+`;

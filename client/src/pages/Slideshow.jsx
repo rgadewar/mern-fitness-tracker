@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Slideshow from '../components/Slideshow';
 import AuthService from '../utils/auth';
 
+import { GetDailyAchievements } from '../utils/queries.js';
+
 const slides = [
   {
     image: '/assets/download.jpeg',
@@ -19,35 +21,20 @@ const slides = [
     caption: 'Caption for Slide 3',
   },
 ];
+ 
 
 function SlideshowPage() {
-  const [userProfile, setUserProfile] = useState(null);
-
-  useEffect(() => {
-    if (AuthService.loggedIn()) {
-      // Get the user's profile data from the JWT token
-      const userProfile = AuthService.getProfile();
-
-      // Access the username
-      const username = userProfile.username;
-
-      // Update the userProfile state
-      setUserProfile(userProfile);
-      console.log('User Profile:', userProfile);
-      console.log('userProfile.data._id:', userProfile.data._id);
-    } else {
-      // User is not logged in
-      console.log('User is not logged in');
-    }
-  }, []);
+  // const [userProfile, setUserProfile] = useState(null);
 
   return (
     <div className="App">
-      {userProfile ? (
+      {/* {userProfile ? (
         <h1>Welcome, {userProfile.data._id}</h1>
       ) : (
         <h1>Welcome!</h1>
       )}
+      */}
+
       <Slideshow slides={slides} />
     </div>
   );
