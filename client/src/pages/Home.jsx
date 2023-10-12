@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '../utils/queries';
 import { idbPromise } from '../utils/indexedDB'; // Import the function
+import AuthService from '../utils/auth';
 
 import {
   Card,
@@ -16,6 +17,8 @@ const Home = () => {
   const { loading, error, data } = useQuery(GET_CATEGORIES);
   const categories = data?.categories || [];
   console.log("categories****", categories)
+  const [userProfile, setUserProfile] = useState(null);
+  
 
   const cardStyle = {
     marginBottom: '16px',
@@ -38,12 +41,31 @@ const Home = () => {
           });
       });
     }
-  }, [categories]);
+  }, []);
 
+  useEffect(() => {
+    if (AuthService.loggedIn()) {
+      // Get the user's profile data from the JWT token
+      const userProfile = AuthService.getProfile();
+
+      // Access the username
+      const username = userProfile.username;
+
+      // Update the userProfile state
+      setUserProfile(userProfile);
+    }
+  }, []);
+  console.log("userProfile**********", userProfile)
   return (
     <main>
       <div className="home-container">
         <div className="category-list">
+        {userProfile ? (
+        <Typography variant="h4">Welcome, {userProfile.data.email}</Typography>
+      ) : (
+        <Typography variant="h4">Welcome!</Typography>
+      )}
+     
           {loading ? (
             <div className="loading-message">Loading...</div>
           ) : error ? (
