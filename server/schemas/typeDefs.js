@@ -26,9 +26,13 @@ const typeDefs = `
   }
 
   type DailyAchievement {
-    date: String!
-    value: Int!
+    name: String
+    date: String
+    value: Int
+    category: String
+    # other fields
   }
+  
 
   type Category {
     _id: ID!
@@ -44,8 +48,9 @@ const typeDefs = `
     me: User
     weeklyProgress(userId: ID!, name: String!): Int
     activityByUserId(userId: ID!): Activity
-    getDailyAchievements(name: String!, startDate: String!, endDate: String!): [DailyAchievement]
-    activityIdByName(name: String!): ID
+    getDailyAchievements(userId: ID!, name: String!, startDate: String!, endDate: String!): [DailyAchievement]
+    activityIdByName(userId: ID!, name: String!): ID
+    getUserActivities(userId: ID!): [Activity]!
     
   }
 
@@ -59,7 +64,7 @@ const typeDefs = `
       value: Float!
       userId: ID!
     ): UpdateDailyAchievementResponse
-    setGoal(activityId: ID!, goal: Int!): Activity
+    setGoal(userId: ID!, activityId: ID!, goal: Int!): Activity
   }
  
 `;

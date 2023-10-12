@@ -13,31 +13,32 @@ import Slideshow from './pages/Slideshow';
 import AuthService from './utils/auth';
 
 
+
 // Import the service worker module
-import { Workbox } from 'workbox-window';
-// Create a new instance of Workbox
-const wb = new Workbox('/serviceWorker.js'); // Replace with the correct path to your service worker file
-// Register the service worker
-wb.register().then((registration) => {
-  // Service worker registration successful
-  console.log('Service Worker registered with scope:', registration.scope);
-}).catch((error) => {
-  // Service worker registration failed
-  console.error('Service Worker registration failed:', error);
-});
+// import { Workbox } from 'workbox-window';
+// // Create a new instance of Workbox
+// const wb = new Workbox('/serviceWorker.js'); // Replace with the correct path to your service worker file
+// // Register the service worker
+// wb.register().then((registration) => {
+//   // Service worker registration successful
+//   console.log('Service Worker registered with scope:', registration.scope);
+// }).catch((error) => {
+//   // Service worker registration failed
+//   console.error('Service Worker registration failed:', error);
+// });
 
 // console.log('PUBLIC_URL:', process.env.PUBLIC_URL);
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/serviceWorker.js') // Path to your service worker file
-    .then((registration) => {
-      console.log('Service Worker registered with scope:', registration.scope);
-    })
-    .catch((error) => {
-      console.error('Service Worker registration failed:', error);
-    });
-}
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker
+//     .register('/serviceWorker.js') // Path to your service worker file
+//     .then((registration) => {
+//       console.log('Service Worker registered with scope:', registration.scope);
+//     })
+//     .catch((error) => {
+//       console.error('Service Worker registration failed:', error);
+//     });
+// }
 const router = createBrowserRouter([
   {
     path: '/',

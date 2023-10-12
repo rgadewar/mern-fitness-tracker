@@ -1,67 +1,78 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES } from '../utils/queries'; // Import the new query
-import Category from '../components/Category'; // Import the Category component
-import '../components/Home/Home.css'; // Import the external CSS file
-import { useDispatch, useSelector } from 'react-redux';
-import { RESET_STATE } from '../Reducers/actions'; 
+import { GET_CATEGORIES } from '../utils/queries';
+import { idbPromise } from '../utils/indexedDB'; // Import the function
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardActions,
+  Button,
+  Typography,
+} from '@mui/material';
 
 const Home = () => {
-  const { loading, error, data } = useQuery(GET_CATEGORIES); // Use GET_CATEGORIES query
+  const { loading, error, data } = useQuery(GET_CATEGORIES);
   const categories = data?.categories || [];
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const state = useSelector((state) => {
-    return state;
-  });
-  const dispatch = useDispatch();
+  console.log("categories****", categories)
 
-  const handleCategoryChange = (event) => {
-    const selectedCategoryId = event.target.value;
-    setSelectedCategory(selectedCategoryId);
-    // Dispatch the "reset" action to reset the Redux store
-    const dispatch = useDispatch();
-    dispatch(RESET_STATE);
+  const cardStyle = {
+    marginBottom: '16px',
   };
+
+  useEffect(() => {
+    function addCategoryToIndexedDB(name, categoryId) {
+      const category = { name, _id: categoryId };
+      return idbPromise('categories', 'put', category);
+    }
+
+    if (categories.length > 0) {
+      categories.forEach((category) => {
+        addCategoryToIndexedDB(category.name, category._id)
+          .then(() => {
+            console.log('Category added to IndexedDB:', category);
+          })
+          .catch((error) => {
+            console.error('Error adding category to IndexedDB:', error);
+          });
+      });
+    }
+  }, [categories]);
 
   return (
     <main>
-      
       <div className="home-container">
-        <div className="category-selection">
-          <label htmlFor="categoryDropdown">Select a Category:</label>
-          <select
-            id="categoryDropdown"
-            name="categoryDropdown"
-            value={selectedCategory || ''}
-            onChange={handleCategoryChange}
-          >
-            <option value="">-- Select Category --</option>
-            {categories.map((category) => (
-              <option value={category._id} key={category._id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+        <div className="category-list">
+          {loading ? (
+            <div className="loading-message">Loading...</div>
+          ) : error ? (
+            <div className="error-message">Error loading categories.</div>
+          ) : categories.length === 0 ? (
+            <div className="no-categories-message">No categories available.</div>
+          ) : (
+            categories.map((category) => (
+              <Card key={category._id} style={cardStyle}>
+                <CardHeader title={category.name} />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    Category Description: {category.description}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    component="a"
+                    href={`/category/${category._id}`}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Track Category
+                  </Button>
+                </CardActions>
+              </Card>
+            ))
+          )}
         </div>
-        {selectedCategory && ( // Conditionally render category list only if a category is selected
-          <div className="category-list">
-            {loading ? (
-              <div className="loading-message">Loading...</div>
-            ) : categories.length === 0 ? (
-              <div className="no-categories-message">No categories available.</div>
-            ) : (
-              categories
-                .filter((category) => category._id === selectedCategory)
-                .map((category) => (
-                  <Link to={`/category/${category._id}`} key={category._id} className="category-link">
-                    <Category {...category} />
-                  </Link>
-                ))
-            )}
-          </div>
-        )}
       </div>
     </main>
   );

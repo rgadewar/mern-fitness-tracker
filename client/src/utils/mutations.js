@@ -35,8 +35,8 @@ mutation UpdateDailyAchievement($name: String!, $date: String!, $value: Float!, 
 `;
 
 export const SET_GOAL_MUTATION = gql`
-mutation SetGoal($activityId: ID!, $goal: Int!) {
-  setGoal(activityId: $activityId, goal: $goal) {
+mutation SetGoal($userId: ID!, $activityId: ID!, $goal: Int!) {
+  setGoal(userId: $userId, activityId: $activityId, goal: $goal) {
     goal
     _id
     name
