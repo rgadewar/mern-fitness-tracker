@@ -14,11 +14,10 @@ import {
 } from '@mui/material';
 
 const Home = () => {
-  const { loading, error, data } = useQuery(GET_CATEGORIES);
+  const { loading, data } = useQuery(GET_CATEGORIES);
   const categories = data?.categories || [];
-  console.log("categories****", categories)
+  console.log("categories****", categories);
   const [userProfile, setUserProfile] = useState(null);
-  
 
   const cardStyle = {
     marginBottom: '16px',
@@ -55,21 +54,19 @@ const Home = () => {
       setUserProfile(userProfile);
     }
   }, []);
-  console.log("userProfile**********", userProfile)
+
   return (
     <main>
       <div className="home-container">
         <div className="category-list">
         {userProfile ? (
-        <Typography variant="h4">Welcome, {userProfile.data.email}</Typography>
-      ) : (
-        <Typography variant="h4">Welcome!</Typography>
-      )}
+          <Typography variant="h4">Welcome, {userProfile.data.email}</Typography>
+        ) : (
+          <Typography variant="h4">Welcome!</Typography>
+        )}
      
           {loading ? (
             <div className="loading-message">Loading...</div>
-          ) : error ? (
-            <div className="error-message">Error loading categories.</div>
           ) : categories.length === 0 ? (
             <div className="no-categories-message">No categories available.</div>
           ) : (
