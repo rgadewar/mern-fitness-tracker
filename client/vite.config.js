@@ -14,6 +14,9 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    include: ['chart.js', 'chartjs-adapter-moment'],
+  },
   build: {
     rollupOptions: {
       // Your rollup options here

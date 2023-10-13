@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import Auth from '../../utils/auth';
 import logoImage from '/assets/logo1.png';
 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Container,
+} from '@mui/material';
+
 const Header = () => {
   const logout = (event) => {
     event.preventDefault();
@@ -10,50 +19,138 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-info text-dark mb-4 py-3 display-flex align-center">
-      <div className="container flex-column justify-space-between-lg justify-center align-center text-center">
-        <Link className="text-dark text-decoration-none d-flex align-center" to="/">
-          {/* <img src={logoImage} alt="TrackLogo" className="logo" /> */}
-          {/* <h1 className="m-0" style={{ fontSize: '3rem', marginLeft: '10px' }}>
-            Fitness Tracker
-          </h1> */}
-        </Link>
-        <p className="m-0" style={{ fontSize: '1.75rem', fontWeight: '700' }}>
-        </p>
-        <div>
-          {Auth.loggedIn() ? (
-            <>
-              <Link className="btn btn-lg btn-primary m-2" to="/">
-                Home
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/slideshow">
-                Slideshow
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/log">
-                Activity Logs
-              </Link>
-              <button className="btn btn-lg btn-light m-2" onClick={logout}>
-                Logout
-              </button>
-              
-            </>
-          ) : (
-            <>
-              <Link className="btn btn-lg btn-primary m-2" to="/login">
-                Login
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/signup">
-                Signup
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/slideshow">
-                Slideshow
-              </Link>
-              
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+    <AppBar position="static" sx={{ backgroundColor: 'teal', marginBottom: 4 }}>
+      <Container>
+        <Toolbar>
+          <Box display="flex" alignItems="center">
+            {/* <img src={logoImage} alt="Logo" style={{ height: '50px', marginRight: '10px' }} /> */}
+            <Typography variant="h4" sx={{ fontFamily: 'cursive', fontWeight: 'bold', fontSize: '3rem' }}>
+              TRACK
+            </Typography>
+          </Box>
+          <div style={{ marginLeft: 'auto' }}>
+            {Auth.loggedIn() ? (
+              <>
+                <Button
+                  component={Link}
+                  to="/"
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'green',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lightgreen',
+                    },
+                  }}
+                >
+                  Home
+                </Button>
+                <Button
+                  component={Link}
+                  to="/slideshow"
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'blue',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lightblue',
+                    },
+                  }}
+                >
+                  Slideshow
+                </Button>
+                <Button
+                  component={Link}
+                  to="/log"
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'red',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'pink',
+                    },
+                  }}
+                >
+                  Activity Logs
+                </Button>
+                <Button
+                  onClick={logout}
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'gray',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lightgray',
+                    },
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  component={Link}
+                  to="/login"
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'green',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lightgreen',
+                    },
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  component={Link}
+                  to="/signup"
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'blue',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lightblue',
+                    },
+                  }}
+                >
+                  Signup
+                </Button>
+                <Button
+                  component={Link}
+                  to="/slideshow"
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: 2,
+                    backgroundColor: 'purple',
+                    transition: 'background-color 0.3s',
+                    '&:hover': {
+                      backgroundColor: 'lavender',
+                    },
+                  }}
+                >
+                  Slideshow
+                </Button>
+              </>
+            )}
+          </div>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
