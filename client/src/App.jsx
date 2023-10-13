@@ -15,11 +15,9 @@ import Footer from './components/Footer';
 import ErrorBoundary from './pages/ErrorBoundary';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
-const theme = createTheme({
-
-});
+import theme from './theme';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -55,8 +53,8 @@ function App() {
           {/* Wrap your entire app with ErrorBoundary */}
           <ErrorBoundary>
             <div className="flex-column justify-flex-start min-100-vh">
-              <Header variant="contained" color="primary" sx={{ ml: 2 }}/>
-              <div className="container">
+              <Header />
+              <div >
                 <Outlet />
               </div>
               <Footer />

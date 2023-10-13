@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, Route, Routes, Outlet } from 'reac
 
 import App from './App.jsx';
 import Home from './pages/Home';
+import Landing from './pages/Landing/Landing.jsx'
 import CategoryDetail from './pages/CategoryDetail';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: AuthService.loggedIn() ? <Home /> : <Login />,
+        element: AuthService.loggedIn() ? <Home /> : <Landing />,
+      },
+      {
+        path: '/landing',
+        element: <Landing />,
       },
       {
         path: '/login',
