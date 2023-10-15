@@ -49,7 +49,7 @@ jobs:
         uses: actions/deploy-pages@v1
 
       - name: Log in to Heroku
-        run: heroku login -i
+        run: echo $HEROKU_API_KEY | heroku login --interactive
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
