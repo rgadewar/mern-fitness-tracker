@@ -13,18 +13,18 @@ export default defineConfig({
         secure: false,
       },
     },
-  },
-  optimizeDeps: {
-    include: ['chart.js', 'chartjs-adapter-moment'],
-  },
-  build: {
-    rollupOptions: {
-      // Your rollup options here
-      input: 'src/main.jsx',
-    },
-  },
-  serviceWorker: {
-    src: 'serviceWorker.js', // Path to your service worker file
-    // Other service worker options go here
-  },
+  }
+  // optimizeDeps: {
+  //   include: ['chart.js', 'chartjs-adapter-moment'],
+  // },
+  // build: {
+  //   rollupOptions: {
+  //     // Your rollup options here
+  //     input: 'src/main.jsx',
+  //   },
+  // },
+  // serviceWorker: {
+  //   src: 'serviceWorker.js', // Path to your service worker file
+  //   // Other service worker options go here
+  // },
 });
