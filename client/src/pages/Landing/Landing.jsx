@@ -1,5 +1,4 @@
 import React from 'react';
-import Buttons from "../../components/Buttons";
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
@@ -21,8 +20,8 @@ const Landing = () => {
                             src="/assets/runTrack.jpg"
                             alt="image of person running on a drawbridge"
                             style={{
-                                width: '100%', // Image takes up the full width of the Grid item
-                                height: 'auto',  // To maintain aspect ratio
+                                width: '100%', 
+                                height: 'auto',  
                             }}
                         />
                     </Grid>
