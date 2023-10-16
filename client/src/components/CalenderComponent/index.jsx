@@ -8,11 +8,12 @@ import { useMutation } from '@apollo/client';
 import { UPDATE_DAILY_ACHIEVEMENT } from '../../utils/mutations';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES, GET_WEEKLY_PROGRESS } from '../../utils/queries';
+import {  GET_WEEKLY_PROGRESS } from '../../utils/queries';
 import AuthService from '../../utils/auth';
 // import { useGlobalState } from '../../utils/userContext'; // Import useGlobalState from your global state context
 import { useDispatch, useSelector } from 'react-redux';
 import { updateWeeklyProgress, updateActivity } from '../../Reducers/actions'; // Import your Redux action
+import { useCalendarFunctions } from './CalendarUtilFunctions';
 
 
 const CalendarComponent = ({ onSave, name }) => {
@@ -21,9 +22,8 @@ const CalendarComponent = ({ onSave, name }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [entryData, setEntryData] = useState({});
   const [goal, setGoal] = useState(100); // Initialize goal with 0
-  const [categoryName, setCategoryName] = useState('');
+  // const [categoryName, setCategoryName] = useState('');
   const [userProfile, setUserProfile] = useState(null);
-
   useEffect(() => {
     if (AuthService.loggedIn()) {
       const userProfile = AuthService.getProfile();
@@ -33,24 +33,11 @@ const CalendarComponent = ({ onSave, name }) => {
     }
   }, []);
 
-  const { categoryId } = useParams();
   const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
-
-  const { data, loading, error } = useQuery(GET_CATEGORIES); 
-
   const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
     variables: { userId: userProfile?.data._id, name: name}, // Use optional chaining to prevent null error
   });
 
-  useEffect(() => {
-    if (!loading && !error && data) {
-      const category = data.categories.find((cat) => cat._id === categoryId);
-
-      if (category) {
-        setCategoryName(category.name);
-      }
-    }
-  }, [categoryId, data, loading, error]);
 
   const state = useSelector((state) => {
     return state
@@ -64,7 +51,7 @@ const CalendarComponent = ({ onSave, name }) => {
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
-  console.log("weekGoal*******", weekGoal)
+
   const handleValueChange = (e) => {
     setValue(e.target.value);
   };
@@ -91,7 +78,7 @@ const CalendarComponent = ({ onSave, name }) => {
         try {
           const response = await updateDailyAchievement({
             variables: {
-              name: categoryName, // Include categoryName in the variables
+              name: name, // Include categoryName in the variables
               date: selectedDate.toISOString(),
               value: parseFloat(value),
               userId: userProfile.data._id, // Provide the user's ID here
@@ -99,8 +86,8 @@ const CalendarComponent = ({ onSave, name }) => {
           });
           if (response.data && response.data.updateDailyAchievement) {
             // Update the progress bar by adding the newly added value
-            const updatedWeeklyProgress =
-              parseFloat( ) + parseFloat(value);
+            const updatedWeeklyProgress = parseFloat(weeklyProgress) + parseFloat(value);
+
   
             const updatedEntryData = { ...entryData };
             updatedEntryData[selectedDate.toDateString()] = {
@@ -117,7 +104,7 @@ const CalendarComponent = ({ onSave, name }) => {
               const newDailyAchievement = {
                 date: new Date(selectedDate.toDateString()),
                 value: parseFloat(value),
-                name: categoryName,
+                name: name,
               };
     
             // Dispatch the action with just the 'value' as the payload

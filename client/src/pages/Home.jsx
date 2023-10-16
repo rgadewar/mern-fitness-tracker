@@ -16,41 +16,18 @@ import {
 const Home = () => {
   const { loading, data } = useQuery(GET_CATEGORIES);
   const categories = data?.categories || [];
-  console.log("categories****", categories);
   const [userProfile, setUserProfile] = useState(null);
 
   const cardStyle = {
     marginBottom: '16px',
   };
 
-  useEffect(() => {
-    function addCategoryToIndexedDB(name, categoryId) {
-      const category = { name, _id: categoryId };
-      return idbPromise('categories', 'put', category);
-    }
-
-    if (categories.length > 0) {
-      categories.forEach((category) => {
-        addCategoryToIndexedDB(category.name, category._id)
-          .then(() => {
-            console.log('Category added to IndexedDB:', category);
-          })
-          .catch((error) => {
-            console.error('Error adding category to IndexedDB:', error);
-          });
-      });
-    }
-  }, []);
 
   useEffect(() => {
     if (AuthService.loggedIn()) {
       // Get the user's profile data from the JWT token
       const userProfile = AuthService.getProfile();
-
-      // Access the username
       const username = userProfile.username;
-
-      // Update the userProfile state
       setUserProfile(userProfile);
     }
   }, []);
@@ -81,7 +58,7 @@ const Home = () => {
                 <CardActions>
                   <Button
                     component="a"
-                    href={`/category/${category._id}`}
+                    href={`/category/${category.name}`}
                     variant="contained"
                     color="primary"
                   >

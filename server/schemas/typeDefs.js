@@ -12,9 +12,16 @@ const typeDefs = `
     user: User
   }
 
+  enum ActivityName {
+    Swimming
+    Running
+    Biking
+    Walking
+  }
+
   type Activity {
     _id: ID!
-    name: String!
+    name: ActivityName! # Use the ActivityName enum here
     goal: Float!
     dailyAchievements: [DailyAchievement]!
     user: User!
@@ -26,11 +33,9 @@ const typeDefs = `
   }
 
   type DailyAchievement {
-    name: String
+    name: ActivityName!
     date: String
     value: Int
-    category: String
-    # other fields
   }
   
 
@@ -44,6 +49,7 @@ const typeDefs = `
     user(userId: ID!): User
     activities: [Activity]!
     categories: [Category]!
+    getActivityNames: [ActivityName]
     getCategoryName(categoryId: ID!): String
     me: User
     weeklyProgress(userId: ID!, name: String!): Int
@@ -51,21 +57,29 @@ const typeDefs = `
     getDailyAchievements(userId: ID!, name: String!, startDate: String!, endDate: String!): [DailyAchievement]
     activityIdByName(userId: ID!, name: String!): ID
     getUserActivities(userId: ID!): [Activity]!
+  
+    getUserWeeklyGoal(userId: ID!, name: ActivityName!): Int # Use the ActivityName enum here
+    
     
   }
 
   type Mutation {
+    users: [User]!
+    user(userId: ID!): User
+    me: User
     addUser(name: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateDailyAchievement(
-      name: String!
+      name: ActivityName!
       date: String!
       value: Float!
       userId: ID!
     ): UpdateDailyAchievementResponse
-    setGoal(userId: ID!, activityId: ID!, goal: Int!): Activity
+    setGoal(userId: ID!, activityId: ID!, goal: Float!): Activity
+    createActivity(name: ActivityName!, goal: Float!): Activity # Use the ActivityName enum here
   }
+  
  
 `;
 

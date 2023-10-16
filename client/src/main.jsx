@@ -57,7 +57,8 @@ const router = createBrowserRouter([
         element: <Signup />,
       },
       {
-        path: '/category/:categoryId',
+        // path: '/category/:categoryId',
+        path: '/category/:name',
         element: AuthService.loggedIn() ? <CategoryDetail /> : <Login />,
       },
       {

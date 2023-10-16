@@ -21,7 +21,7 @@ function ShowLogPage() {
   const [endDate, setEndDate] = useState(null);
   const [searching, setSearching] = useState(false); // State for searching
   const [searchResults, setSearchResults] = useState(null); // State to store search results
-  const [selectedCategory, setSelectedCategory] = useState('Biking'); // State for selected category
+  const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
   
   // const name = 'All';
 
@@ -98,16 +98,17 @@ function ShowLogPage() {
           <FormControl fullWidth>
             <InputLabel>Select Category</InputLabel>
             <Select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <MenuItem value="All">All</MenuItem>
-              {categoryData?.categories.map((category) => (
-                <MenuItem key={category.id} value={category.name}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </Select>
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <MenuItem value="All">All</MenuItem>
+            {categoryData?.categories.map((category) => (
+  <MenuItem key={category._id} value={category.name}>
+    {category.name}
+  </MenuItem>
+))}
+
+          </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>

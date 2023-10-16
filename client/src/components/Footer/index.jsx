@@ -1,5 +1,16 @@
 import React from 'react';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
+const iconStyle = {
+  color: 'black', // Set the color to black
+  fontSize: 30,    // Adjust the font size if needed
+};
+const centerText = {
+  textAlign: 'center',
+};
 const Footer = () => {
   return (
     <footer id="footer" className="footer bg-light text-black">
@@ -30,9 +41,9 @@ const Footer = () => {
           <div className="col-lg-3 col-md-6">
             <i className="bi bi-clock icon"></i>
             <div>
-              <h4>Opening Hours</h4>
+              <h4>Office Hours</h4>
               <p>
-                <strong>Mon-Sat: 11AM - 7PM<br />
+                <strong>Mon-Fri: 9AM - 5PM<br />
                 Sunday: Closed</strong>
               </p>
             </div>
@@ -42,23 +53,25 @@ const Footer = () => {
             <h4>Follow Us</h4>
             <div className="social-links">
               <a href="#" className="social-link">
-                <i className="bi bi-twitter"></i>
+                <TwitterIcon style={iconStyle} />
               </a>
               <a href="#" className="social-link">
-                <i className="bi bi-facebook"></i>
+                <FacebookIcon style={iconStyle} />
               </a>
               <a href="#" className="social-link">
-                <i className="bi bi-instagram"></i>
+                <InstagramIcon style={iconStyle} />
               </a>
               <a href="#" className="social-link">
-                <i className="bi bi-linkedin"></i>
+                <LinkedInIcon style={iconStyle} />
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <p>Copyright © 2023  Track. All rights reserved.</p>
+      <div style={centerText}>
+        <p>Copyright © 2023 Track. All rights reserved.</p>
+      </div>
     </footer>
   );
 };

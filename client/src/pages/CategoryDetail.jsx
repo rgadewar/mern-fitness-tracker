@@ -1,61 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_CATEGORIES, GET_WEEKLY_PROGRESS, GET_ACTIVITY_ID_BY_NAME } from '../utils/queries';
+import {
+  GET_WEEKLY_PROGRESS,
+  GET_USER_WEEKLY_GOAL,
+} from '../utils/queries';
 import CalendarComponent from '../components/CalenderComponent';
 import AuthService from '../utils/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setWeekGoal, updateWeeklyProgress } from '../Reducers/actions';
 import { SET_GOAL_MUTATION } from '../utils/mutations';
-import { idbPromise,getCategoriesFromIndexedDB } from '../utils/indexedDB'; // Import the function
-
+import useActivityData from '../components/Category/CategoryDetailsUtilFunctions';
 
 const CategoryDetail = () => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { categoryId } = useParams();
-  // const { loading: categoriesLoading, error: categoriesError, data: categoriesData } = useQuery(GET_CATEGORIES);
   const [categoryName, setCategoryName] = useState('');
+  const { name } = useParams(); // Extract categoryName from the URL
+
+  useEffect(() => {
+    if (name) {
+      setCategoryName(name);
+    }
+  }, [name]);
+
   const userProfile = AuthService.getProfile();
 
-  // Retrieve the initial weekly progress and weeklyProgress from the global state
-  const initialWeeklyProgress = useSelector((state) => state.initialWeeklyProgress);
-  useEffect(() => {
-    getCategoriesFromIndexedDB() // Call the function to fetch categories from IndexedDB
-      .then((categories) => {
-        // Process the categories data
-        const category = categories.find((cat) => cat._id === categoryId);
+  // Use the custom hook to get the required data
+  const {
+    activityIdData,
+    activityIdLoading,
+    data: activityGoalData,
+    activityGoalLoading,
+    setGoalMutation,
+  } = useActivityData(userProfile, categoryName, dispatch);
 
-        if (category) {
-          setCategoryName(category.name);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching categories from IndexedDB:', error);
-      });
-  }, [categoryId]);
-
-
-
-  // Define your GET_ACTIVITY_ID_BY_NAME query
-  const { data: activityIdData, loading: activityIdLoading, error: activityIdError } = useQuery(GET_ACTIVITY_ID_BY_NAME, {
+  // Define your GET_WEEKLY_PROGRESS query
+  const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
     variables: {
       userId: userProfile?.data._id,
-      name: categoryName, // Use the categoryName or modify as needed
+      name: categoryName ? categoryName : null,
+    },
+    onCompleted: (data) => {
+      dispatch(updateWeeklyProgress(data.weeklyProgress));
     },
   });
-
-  if (activityIdLoading) {
-    // Handle loading state (optional)
-  } else if (activityIdError) {
-    console.error("Error fetching activityIdData:", activityIdError);
-  } else {
-    // Now you can access activityIdData safely
-    console.log("activityIdData", activityIdData);
-  }
-
-  // Define a function to handle goal submission
-  const [setGoalMutation] = useMutation(SET_GOAL_MUTATION);
 
   const handleGoalSubmit = async () => {
     try {
@@ -73,7 +62,7 @@ const CategoryDetail = () => {
         variables: {
           userId: userProfile?.data._id,
           activityId: activityIdData.activityIdByName,
-          goal: state.weekGoal,
+          goal: parseFloat(state.weekGoal),
         },
       });
 
@@ -83,31 +72,6 @@ const CategoryDetail = () => {
     }
   };
 
-  // Define your GET_WEEKLY_PROGRESS query
-  const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
-    variables: {
-      userId: userProfile?.data._id,
-      name: categoryName ? categoryName : null,
-    },
-    onCompleted: (data) => {
-      dispatch(updateWeeklyProgress(data.weeklyProgress));
-    },
-  });
-
-  // useEffect(() => {
-  //   if (!categoriesLoading && !categoriesError && categoriesData) {
-  //     const category = categoriesData.categories.find((cat) => cat._id === categoryId);
-
-  //     if (category) {
-  //       setCategoryName(category.name);
-  //     }
-  //   }
-  // }, [categoryId, categoriesData, categoriesLoading, categoriesError]);
-
-  const handleWeeklyProgressChange = (e) => {
-    dispatch(updateWeeklyProgress(e.target.value));
-  };
-
   const [tableData, setTableData] = useState([]);
 
   const handleCalendarSave = ({ date, value }) => {
@@ -115,20 +79,18 @@ const CategoryDetail = () => {
       ...tableData,
       {
         day: date.toLocaleDateString(),
-        progress: value, // Fixed the variable name here
+        progress: value,
       },
     ]);
   };
 
-
-  // Remove the local weekGoal state and use state.weekGoal from Redux
   return (
     <div className="category-detail">
       <h1>{categoryName}</h1>
       <p>Your Progress: {state.weeklyProgress}</p>
 
       <div>
-        <label htmlFor="weekGoal">Weekly Goal:</label>
+        <label htmlFor="weekGoal">Weekly Goal: </label>
         <input
           type="number"
           id="weekGoal"
