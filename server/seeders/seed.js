@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Category = require('./models/Category'); // Import your Category model
+const Category = require('../models/Category'); // Import your Category model
 
 // Define an array of sample categories
 const sampleCategories = [

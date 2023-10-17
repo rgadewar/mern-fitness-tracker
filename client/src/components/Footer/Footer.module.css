@@ -1,0 +1,13 @@
+.footerCard {
+    display:grid;
+    color:black;
+    font-size: 0.5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.copyRight {
+    justify-content: center;
+}

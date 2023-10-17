@@ -89,7 +89,7 @@ const resolvers = {
       }
     },
 
-    getDailyAchievements: async (parent, { userId, name, startDate, endDate }) => {
+    getDailyAchievements: async (parent, { name, startDate, endDate }) => {
       try {
         const activities = await Activity.find({ user: userId, name });
     
@@ -144,10 +144,8 @@ const resolvers = {
         if (!user) {
           throw new Error('User not found');
         }
-        console.log("user.activities", user.activities)
-        return user.activities;
       } catch (error) {
-        throw new Error(`Error fetching user activities: ${error.message}`);
+        throw new Error(`Error fetching activity ID by name: ${error.message}`);
       }
     },
 
@@ -308,5 +306,24 @@ const resolvers = {
 
 
 
+    setGoal: async (_, { activityId, goal }) => {
+      try {
+        // Find the activity by its ID and update the "goal" field
+        const updatedActivity = await Activity.findOneAndUpdate(
+          { _id: activityId },
+          { $set: { goal: goal } }, // Use an object to specify the field and its new value
+          { new: true }
+        );
+    
+        if (!updatedActivity) {
+          throw new Error('Activity not found');
+        }
+    
+        return updatedActivity;
+      } catch (error) {
+        throw new Error(`Error setting goal: ${error.message}`);
+      }
+    },
+    
 
 module.exports = resolvers;

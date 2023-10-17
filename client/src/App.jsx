@@ -1,4 +1,4 @@
-import './App.css';
+// import './App.css';
 import {
   ApolloClient,
   InMemoryCache,
@@ -15,6 +15,9 @@ import Footer from './components/Footer';
 import ErrorBoundary from './pages/ErrorBoundary';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import { ThemeProvider } from '@mui/material/styles';
+
+import theme from './theme';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -42,24 +45,26 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <Provider store={store}>
-      {/* <UserProvider> 
+    <ThemeProvider theme={theme}>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
+          {/* <UserProvider> 
         <ActivityProvider> */}
           {/* Wrap your entire app with ErrorBoundary */}
           <ErrorBoundary>
             <div className="flex-column justify-flex-start min-100-vh">
               <Header />
-              <div className="container">
+              <div >
                 <Outlet />
               </div>
               <Footer />
             </div>
           </ErrorBoundary>
-        {/* </ActivityProvider>
+          {/* </ActivityProvider>
       </UserProvider> */}
-    </Provider>
-    </ApolloProvider>
+        </Provider>
+      </ApolloProvider>
+    </ThemeProvider>
   );
 }
 
