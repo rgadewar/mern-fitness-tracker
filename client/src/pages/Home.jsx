@@ -57,6 +57,7 @@ const Home = () => {
 
   return (
     <main>
+      
       <div className="home-container">
         <div className="category-list">
         {userProfile ? (

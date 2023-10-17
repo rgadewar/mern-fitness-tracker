@@ -83,9 +83,9 @@ const resolvers = {
       }
     },
 
-    getDailyAchievements: async (parent, { userId, name, startDate, endDate }) => {
+    getDailyAchievements: async (parent, { name, startDate, endDate }) => {
       try {
-        const activities = await Activity.find({ user: userId, name });// Find activities with the specified name
+        const activities = await Activity.find({ name }); // Find activities with the specified name
     
         if (!activities || activities.length === 0) {
           throw new Error('No activities found with the provided name');
@@ -116,40 +116,21 @@ const resolvers = {
     },
     
     
-    activityIdByName: async (_, { userId, name }) => {
-      // Check if the user with the provided userId exists
-      const user = await User.findById(userId);
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      // Find the activity with the given name that belongs to the user
-      const activity = await Activity.findOne({ name, user: userId });
-
-      if (!activity) {
-        throw new Error('Activity not found');
-      }
-
-      return activity._id;
-    },
-  
-
-    getUserActivities: async (parent, args, context, info) => {
+    activityIdByName: async (_, { name }) => {
       try {
-        const user = await User.findById(args.userId).populate('activities');
-        console.log("user*******", user)
-//         console.log('currentWeekStart:', currentWeekStart);
-// console.log('currentWeekEnd:', currentWeekEnd);
-        if (!user) {
-          throw new Error('User not found');
+        // Find the activity by its name and return its ID
+        const activity = await Activity.findOne({ name });
+        if (activity) {
+          return activity._id;
+        } else {
+          throw new Error('Activity not found');
         }
-        console.log("user.activities", user.activities)
-        return user.activities;
       } catch (error) {
-        throw new Error(`Error fetching user activities: ${error.message}`);
+        throw new Error(`Error fetching activity ID by name: ${error.message}`);
       }
     },
-  
+
+    
   },
 
   Mutation: {
@@ -290,5 +271,24 @@ const resolvers = {
 
 
 
+    setGoal: async (_, { activityId, goal }) => {
+      try {
+        // Find the activity by its ID and update the "goal" field
+        const updatedActivity = await Activity.findOneAndUpdate(
+          { _id: activityId },
+          { $set: { goal: goal } }, // Use an object to specify the field and its new value
+          { new: true }
+        );
+    
+        if (!updatedActivity) {
+          throw new Error('Activity not found');
+        }
+    
+        return updatedActivity;
+      } catch (error) {
+        throw new Error(`Error setting goal: ${error.message}`);
+      }
+    },
+    
 
 module.exports = resolvers;
