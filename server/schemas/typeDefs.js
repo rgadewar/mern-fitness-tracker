@@ -58,7 +58,7 @@ const typeDefs = `
     activityIdByName(userId: ID!, name: String!): ID
     getUserActivities(userId: ID!): [Activity]!
   
-    getUserWeeklyGoal(userId: ID!, name: ActivityName!): Int # Use the ActivityName enum here
+    getUserWeeklyGoal(userId: ID!, name: String!): Int # Use the ActivityName enum here
     
     
   }

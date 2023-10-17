@@ -46,8 +46,8 @@ query GetDailyAchievements($userId: ID!, $name: String!, $startDate: String!, $e
 }
 `;
 export const GET_ACTIVITY_ID_BY_NAME = gql`
-query Query($name: String!, $userId: ID!) {
-  activityIdByName(name: $name, userId: $userId)
+query Query($userId: ID!, $name: ActivityName!) {
+  getUserWeeklyGoal(userId: $userId, name: $name)
 }
 `;
 
