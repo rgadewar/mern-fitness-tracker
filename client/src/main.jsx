@@ -1,9 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import ReactDOM from 'react-dom/client';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Route, Routes, Outlet } from 'react-router-dom';
-import { createBrowserRouter, RouterProvider, Route, Routes, Outlet } from 'react-router-dom';
-
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import App from './App.jsx';
 import Home from './pages/Home';
 import Landing from './pages/Landing/Landing.jsx'

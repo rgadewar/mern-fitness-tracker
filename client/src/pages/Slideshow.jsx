@@ -4,7 +4,6 @@ import AuthService from '../utils/auth';
 
 import { GetDailyAchievements } from '../utils/queries.js';
 
-import { GetDailyAchievements } from '../utils/queries.js';
 
 const slides = [
   {
