@@ -1,67 +1,98 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_CATEGORIES } from '../utils/queries'; // Import the new query
-import Category from '../components/Category'; // Import the Category component
-import '../components/Home/Home.css'; // Import the external CSS file
-import { useDispatch, useSelector } from 'react-redux';
-import { RESET_STATE } from '../Reducers/actions'; 
+import { GET_CATEGORIES } from '../utils/queries';
+import { idbPromise } from '../utils/indexedDB'; // Import the function
+import AuthService from '../utils/auth';
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardActions,
+  Button,
+  Typography,
+} from '@mui/material';
 
 const Home = () => {
-  const { loading, error, data } = useQuery(GET_CATEGORIES); // Use GET_CATEGORIES query
+  const { loading, data } = useQuery(GET_CATEGORIES);
   const categories = data?.categories || [];
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const state = useSelector((state) => {
-    return state;
-  });
-  const dispatch = useDispatch();
+  console.log("categories****", categories);
+  const [userProfile, setUserProfile] = useState(null);
 
-  const handleCategoryChange = (event) => {
-    const selectedCategoryId = event.target.value;
-    setSelectedCategory(selectedCategoryId);
-    // Dispatch the "reset" action to reset the Redux store
-    const dispatch = useDispatch();
-    dispatch(RESET_STATE);
+  const cardStyle = {
+    marginBottom: '16px',
   };
+
+  useEffect(() => {
+    function addCategoryToIndexedDB(name, categoryId) {
+      const category = { name, _id: categoryId };
+      return idbPromise('categories', 'put', category);
+    }
+
+    if (categories.length > 0) {
+      categories.forEach((category) => {
+        addCategoryToIndexedDB(category.name, category._id)
+          .then(() => {
+            console.log('Category added to IndexedDB:', category);
+          })
+          .catch((error) => {
+            console.error('Error adding category to IndexedDB:', error);
+          });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (AuthService.loggedIn()) {
+      // Get the user's profile data from the JWT token
+      const userProfile = AuthService.getProfile();
+
+      // Access the username
+      const username = userProfile.username;
+
+      // Update the userProfile state
+      setUserProfile(userProfile);
+    }
+  }, []);
 
   return (
     <main>
       
       <div className="home-container">
-        <div className="category-selection">
-          <label htmlFor="categoryDropdown">Select a Category:</label>
-          <select
-            id="categoryDropdown"
-            name="categoryDropdown"
-            value={selectedCategory || ''}
-            onChange={handleCategoryChange}
-          >
-            <option value="">-- Select Category --</option>
-            {categories.map((category) => (
-              <option value={category._id} key={category._id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedCategory && ( // Conditionally render category list only if a category is selected
-          <div className="category-list">
-            {loading ? (
-              <div className="loading-message">Loading...</div>
-            ) : categories.length === 0 ? (
-              <div className="no-categories-message">No categories available.</div>
-            ) : (
-              categories
-                .filter((category) => category._id === selectedCategory)
-                .map((category) => (
-                  <Link to={`/category/${category._id}`} key={category._id} className="category-link">
-                    <Category {...category} />
-                  </Link>
-                ))
-            )}
-          </div>
+        <div className="category-list">
+        {userProfile ? (
+          <Typography variant="h4">Welcome, {userProfile.data.email}</Typography>
+        ) : (
+          <Typography variant="h4">Welcome!</Typography>
         )}
+     
+          {loading ? (
+            <div className="loading-message">Loading...</div>
+          ) : categories.length === 0 ? (
+            <div className="no-categories-message">No categories available.</div>
+          ) : (
+            categories.map((category) => (
+              <Card key={category._id} style={cardStyle}>
+                <CardHeader title={category.name} />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    Category Description: {category.description}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    component="a"
+                    href={`/category/${category._id}`}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Track Category
+                  </Button>
+                </CardActions>
+              </Card>
+            ))
+          )}
+        </div>
       </div>
     </main>
   );
