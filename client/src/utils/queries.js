@@ -50,3 +50,9 @@ query Query($name: String!, $userId: ID!) {
   activityIdByName(name: $name, userId: $userId)
 }
 `;
+
+export const GET_USER_WEEKLY_GOAL = gql`
+query Query($userId: ID!, $name: String!) {
+  getUserWeeklyGoal(userId: $userId, name: $name)
+}
+`;

@@ -1,6 +1,7 @@
 const { User, Activity, Category } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 const { getWeeklyProgress } = require('../utils/weeklyProgress');
+const { ActivityName } = require('./typeDefs');
 
 
 const resolvers = {
@@ -18,6 +19,11 @@ const resolvers = {
         return Profile.findOne({ _id: context.user._id });
       }
       throw AuthenticationError;
+    },
+
+    getActivityNames: () => {
+      // Return an array of possible enum values
+      return Object.values(ActivityName);
     },
 
     activities: async () => {
@@ -85,7 +91,7 @@ const resolvers = {
 
     getDailyAchievements: async (parent, { name, startDate, endDate }) => {
       try {
-        const activities = await Activity.find({ name }); // Find activities with the specified name
+        const activities = await Activity.find({ user: userId, name });
     
         if (!activities || activities.length === 0) {
           throw new Error('No activities found with the provided name');
@@ -116,21 +122,50 @@ const resolvers = {
     },
     
     
-    activityIdByName: async (_, { name }) => {
+    activityIdByName: async (_, { userId, name }) => {
+      // Check if the user with the provided userId exists
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const activity = await Activity.findOne({ name, user: userId });
+
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+
+      return activity._id;
+    },
+  
+
+    getUserActivities: async (parent, args, context, info) => {
       try {
-        // Find the activity by its name and return its ID
-        const activity = await Activity.findOne({ name });
-        if (activity) {
-          return activity._id;
-        } else {
-          throw new Error('Activity not found');
+        const user = await User.findById(args.userId).populate('activities');
+        if (!user) {
+          throw new Error('User not found');
         }
       } catch (error) {
         throw new Error(`Error fetching activity ID by name: ${error.message}`);
       }
     },
 
-    
+    getUserWeeklyGoal: async (_, { userId, name }) => {
+      try {
+        const user = await User.findById(userId).populate('activities');
+        if (!user) {
+          throw new Error('User not found');
+        }
+  
+        const activity = user.activities.find((act) => act.name === name);
+        if (!activity) {
+          throw new Error('Activity not found');
+        }
+  
+        return activity.goal; // Assuming that the goal is the weekly goal
+      } catch (error) {
+        throw new Error('Failed to fetch user weekly goal: ' + error.message);
+      }
+    },
   },
 
   Mutation: {

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const ADD_USER = gql`
   mutation addUser($name: String!, $email: String!, $password: String!) {
@@ -25,22 +25,29 @@ export const LOGIN_USER = gql`
 `;
 
 export const UPDATE_DAILY_ACHIEVEMENT = gql`
-mutation UpdateDailyAchievement($name: String!, $date: String!, $value: Float!, $userId: ID!) {
-  updateDailyAchievement(name: $name, date: $date, value: $value, userId: $userId) {
-    success
-    message
+  mutation UpdateDailyAchievement(
+    $name: ActivityName!
+    $date: String!
+    $value: Float!
+    $userId: ID!
+  ) {
+    updateDailyAchievement(
+      name: $name
+      date: $date
+      value: $value
+      userId: $userId
+    ) {
+      message
+      success
+    }
   }
-  }
-
 `;
 
-
 export const SET_GOAL_MUTATION = gql`
-mutation SetGoal($activityId: ID!, $goal: Int!) {
-  setGoal(activityId: $activityId, goal: $goal) {
-    goal
-    _id
-    name
+  mutation SetGoal($userId: ID!, $activityId: ID!, $goal: Float!) {
+    setGoal(userId: $userId, activityId: $activityId, goal: $goal) {
+      goal
+      name
+    }
   }
-}
 `;
