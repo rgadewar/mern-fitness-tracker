@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Auth from '../utils/auth';
 
 const Login = (props) => {
@@ -44,7 +45,7 @@ const Login = (props) => {
     <main className="flex-row justify-center mb-4">
       <div className="col-12 col-lg-10">
         <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Login</h4>
+          <h4>Login</h4>
           <div className="card-body">
             {data ? (
               <p>
@@ -53,7 +54,7 @@ const Login = (props) => {
               </p>
             ) : (
               <form onSubmit={handleFormSubmit}>
-                <input
+                <TextField
                   className="form-input"
                   placeholder="Your email"
                   name="email"
@@ -61,7 +62,7 @@ const Login = (props) => {
                   value={formState.email}
                   onChange={handleChange}
                 />
-                <input
+                <TextField
                   className="form-input"
                   placeholder="******"
                   name="password"
@@ -69,13 +70,9 @@ const Login = (props) => {
                   value={formState.password}
                   onChange={handleChange}
                 />
-                <button
-                  className="btn btn-block btn-info"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
-                >
-                  Submit
-                </button>
+                <Button component={Link} to="/Login/login.jsx" sx={{ width: "40%", height: "auto" }} variant="contained">
+                  Login
+                </Button>
               </form>
             )}
 
@@ -85,9 +82,9 @@ const Login = (props) => {
               </div>
             )}
           </div>
-          
+
         </div>
-        
+
       </div>
     </main>
   );

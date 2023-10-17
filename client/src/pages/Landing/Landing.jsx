@@ -33,7 +33,7 @@ const Landing = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <Button component={Link} to="/login" sx={{ width: "40%", height: "auto" }} variant="contained">
+                    <Button component={Link} to="/Login/login.jsx" sx={{ width: "40%", height: "auto" }} variant="contained">
                         Login
                     </Button>
                 </Grid>
