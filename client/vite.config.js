@@ -14,17 +14,17 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    include: ['chart.js', 'chartjs-adapter-moment'],
+  },
   build: {
     rollupOptions: {
       // Your rollup options here
       input: 'src/main.jsx',
-      // Specify external dependencies here
-      external: ['react', 'react-dom', 'redux', 'react-redux'],
     },
-    outDir: 'dist', // Specify the output directory for the build
   },
   serviceWorker: {
-    src: 'serviceWorker.js',
+    src: 'serviceWorker.js', // Path to your service worker file
     // Other service worker options go here
   },
 });

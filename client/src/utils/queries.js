@@ -38,15 +38,15 @@ query Query($userId: ID!, $name: String!) {
 `;
 
 export const GetDailyAchievements = gql`
-query GetDailyAchievements($name: String!, $startDate: String!, $endDate: String!) {
-  getDailyAchievements(name: $name, startDate: $startDate, endDate: $endDate) {
+query GetDailyAchievements($userId: ID!, $name: String!, $startDate: String!, $endDate: String!) {
+  getDailyAchievements(userId: $userId, name: $name, startDate: $startDate, endDate: $endDate) {
     date
     value
   }
 }
 `;
 export const GET_ACTIVITY_ID_BY_NAME = gql`
-query activityIdByName($name: String!) {
-  activityIdByName(name: $name)
+query Query($name: String!, $userId: ID!) {
+  activityIdByName(name: $name, userId: $userId)
 }
 `;

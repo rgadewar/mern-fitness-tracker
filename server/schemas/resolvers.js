@@ -234,6 +234,43 @@ const resolvers = {
       }
     },
     
+    setGoal: async (_, { userId, activityId, goal }) => {
+      try {
+        // First, find the user by their ID
+        const user = await User.findById(userId);
+    
+        if (!user) {
+          throw new Error('User not found');
+        }
+    
+        // Then, find the activity by its ID
+        const activity = await Activity.findById(activityId);
+    
+        if (!activity) {
+          throw new Error('Activity not found');
+        }
+    
+        // Update the activity's goal
+        activity.goal = goal;
+        
+        // Save the updated activity
+        await activity.save();
+    
+        return activity;
+      } catch (error) {
+        throw new Error(`Error setting goal: ${error.message}`);
+      }
+    },
+    
+    
+
+
+  },
+};
+
+
+
+
     setGoal: async (_, { activityId, goal }) => {
       try {
         // Find the activity by its ID and update the "goal" field
@@ -253,13 +290,5 @@ const resolvers = {
       }
     },
     
-
-
-  },
-};
-
-
-
-
 
 module.exports = resolvers;

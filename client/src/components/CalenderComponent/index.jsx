@@ -55,6 +55,7 @@ const CalendarComponent = ({ onSave, name }) => {
     return state
   });
 
+
   const dispatch = useDispatch();
   const weekGoal = state.weekGoal || 0;
   const initialWeeklyProgress = state.initialWeeklyProgress || 0; // Use the initialWeeklyProgress from the global state
