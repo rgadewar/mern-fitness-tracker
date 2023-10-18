@@ -87,11 +87,11 @@ function ShowLogPage() {
 
   return (
     <Container>
-      {userProfile ? (
+      {/* {userProfile ? (
         <Typography variant="h4">Welcome, {userProfile.data._id}</Typography>
       ) : (
         <Typography variant="h4">Welcome!</Typography>
-      )}
+      )} */}
       <Typography variant="h4">Your Daily Achievements</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>

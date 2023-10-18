@@ -6,9 +6,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import styles from "./header.module.css";
 import Grid from "@mui/material/Grid";
+// import { ReactComponent as Logo } from '../assets/Logo2.jpg'; //
 
 const Header = () => {
-
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
@@ -18,25 +18,43 @@ const Header = () => {
 
   return (
     <header className={styles["headerCard"]}>
-      <Grid container  justifyContent="center">
+      <Grid container justifyContent="center">
         <div>
           <Grid item container justifyContent="center">
-            <p
-              className="m-0"
-              style={{
-                fontSize: "1.78rem",
-                fontWeight: "700",
-                fontFamily: "Roboto",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              Keep your life on Track. From step to finish.
-            </p>
-            <Grid item xs={12} container justifyContent="center">
+          <Grid item xs={12} container justifyContent="flex-start" alignItems="center">
+              <div
+                style={{
+                  backgroundColor: 'white',
+                  padding: '5px',
+                  marginRight: '30px',
+                }}
+              >
+                 <a href="/"> {/* Add an anchor tag with the homepage URL */}
+                  <img
+                    src={logoImage} // Use the imported logoImage
+                    alt="Logo"
+                    style={{ maxWidth: '100px' }}
+                  />
+                </a>
+              </div>
+              <p
+                className="m-0"
+                style={{
+                  fontSize: '1.78rem',
+                  fontWeight: '700',
+                  fontFamily: 'Roboto',
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                Keep your life on Track. From step to finish.
+              </p>
+            </Grid>
+            <Grid item xs={12} container justifyContent="right">
+      
               {isLoggedIn ? ( // Check if the user is logged in
                 <React.Fragment>
-                   <a href="/">
+                  <a href="/">
                     <p
                       style={{
                         width: "8rem",
@@ -48,7 +66,7 @@ const Header = () => {
                     >
                       Home
                     </p>
-                  </a>          
+                  </a>
                   <a href="/log">
                     <p
                       style={{
@@ -84,70 +102,41 @@ const Header = () => {
                   >
                     Logout
                   </a>
-                  <a href="/aboutus">
-                <p
-                  component={Link}
-                  to="/aboutus"
-                  style={{
-                    width: "8rem",
-                    height: "auto",
-                    textAlign: "center",
-                    color: "white",
-                    fontFamily: "Roboto",
-                  }}
-                >
-                  About Us
-                </p>
-              </a>
+      
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                    <a href="/login">
-                <p
-                  component={Link}
-                  to="/login"
-                  style={{
-                    width: "8rem",
-                    height: "auto",
-                    textAlign: "center",
-                    color: "white",
-                    fontFamily: "Roboto",
-                  }}
-                >
-                  Login
-                </p>
-              </a>
-              <a href="/signup">
-                <p
-                  component={Link}
-                  to="/signup"
-                  style={{
-                    width: "8rem",
-                    height: "auto",
-                    textAlign: "center",
-                    color: "white",
-                    fontFamily: "Roboto",
-                  }}
-                >
-                  SignUp
-                </p>
-              </a>
-                  <a href="/#">
-                <p
-                  component={Link}
-                  to="/#"
-                  style={{
-                    width: "8rem",
-                    height: "auto",
-                    textAlign: "center",
-                    color: "white",
-                    fontFamily: "Roboto",
-                  }}
-                >
-                  About Us
-                </p>
-              </a>
-              <a href="/">
+                  <a href="/login">
+                    <p
+                      component={Link}
+                      to="/login"
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      Login
+                    </p>
+                  </a>
+                  <a href="/signup">
+                    <p
+                      component={Link}
+                      to="/signup"
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      SignUp
+                    </p>
+                  </a>
+                  <a href="/">
                     <p
                       style={{
                         width: "8rem",
@@ -159,11 +148,25 @@ const Header = () => {
                     >
                       Home
                     </p>
-                  </a>       
-
-              
+                  </a>
+                  
                 </React.Fragment>
               )}
+              <a href="/aboutus">
+                    <p
+                      component={Link}
+                      to="/aboutus"
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      About Us
+                    </p>
+                  </a>
             </Grid>
           </Grid>
         </div>

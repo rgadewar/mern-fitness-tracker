@@ -26,7 +26,7 @@ const AboutUs = () => {
             <li>Set Goals: Define your fitness objectives and work towards them.</li>
             <li>Stay Motivated: Get real-time feedback and celebrate your achievements.</li>
             <li>Monitor Your Progress: Keep an eye on your performance and improvements over time.</li>
-            <li>Connect with Others: Join the fitness community, share your achievements, and stay inspired.</li>
+            {/* <li>Connect with Others: Join the fitness community, share your achievements, and stay inspired.</li> */}
           </ul>
           <Typography>
             Our team is committed to providing you with a user-friendly and effective platform to help you stay active and fit. We are passionate about promoting a healthy lifestyle, and we're here to support you in your fitness journey.
