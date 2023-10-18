@@ -42,7 +42,9 @@ const Home = () => {
         ) : (
           <Typography variant="h4">Welcome!</Typography>
         )}
-        {/* Render the Slider component here */}
+        <Typography variant="body1">
+        Please select a category to track your actvities:
+      </Typography>
         <Slider />
           {loading ? (
             <div className="loading-message">Loading...</div>
