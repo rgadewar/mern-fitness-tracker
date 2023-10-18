@@ -64,6 +64,7 @@ const typeDefs = `
     getUserActivities(userId: ID!): [Activity]!
   
     getUserWeeklyGoal(userId: ID!, name: String!): Int 
+    getTrackedActivitiesForCurrentWeek(userId: ID!): [Activity]
     
     
   }

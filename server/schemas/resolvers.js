@@ -2,7 +2,7 @@ const { User, Activity, Category } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 const { getWeeklyProgress } = require('../utils/weeklyProgress');
 const { ActivityName } = require('./typeDefs');
-
+const moment = require('moment'); 
 
 const resolvers = {
   Query: {
@@ -160,6 +160,44 @@ const resolvers = {
         return activity.goal; // Assuming that the goal is the weekly goal
       } catch (error) {
         throw new Error('Failed to fetch user weekly goal: ' + error.message);
+      }
+    },
+    
+    getTrackedActivitiesForCurrentWeek: async (_, { userId }, context) => {
+      try {
+        const currentDate = moment(); // Get the current date
+        const startOfWeek = currentDate.startOf('week'); // Calculate the start of the current week
+        const endOfWeek = currentDate.endOf('week'); // Calculate the end of the current week
+    
+        const activities = await Activity.find({
+          user: userId,
+          'dailyAchievements.date': {
+            $gte: startOfWeek.toDate(),
+            $lte: endOfWeek.toDate(),
+          },
+        });
+    
+        // Define a function to format daily achievements
+        const formatAchievements = (achievements) => {
+          return achievements.map((achievement) => ({
+            date: achievement.date.toISOString().split('T')[0],
+            value: achievement.value,
+          }));
+        };
+    
+        // Extract and format daily achievements from the activities
+        const trackedAchievements = activities.flatMap((activity) =>
+          formatAchievements(
+            activity.dailyAchievements.filter((achievement) =>
+              moment(achievement.date).isBetween(startOfWeek, endOfWeek)
+            )
+          )
+        );
+    
+        return trackedAchievements;
+      } catch (error) {
+        console.error('Error fetching tracked activities for the current week:', error);
+        throw new Error('Server error');
       }
     },
     
