@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import Grid from '@mui/material/Grid';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Auth from '../utils/auth';
 
 const Signup = () => {
@@ -41,10 +42,9 @@ const Signup = () => {
   };
 
   return (
-    <main className="flex-row justify-center mb-4">
-      <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
+    <main >
+      <div >
+        <div >
           <div className="card-body">
             {data ? (
               <p>
@@ -52,8 +52,12 @@ const Signup = () => {
                 <Link to="/">back to the homepage.</Link>
               </p>
             ) : (
+              <Grid container justifyContent={'center'}>
+
               <form onSubmit={handleFormSubmit}>
-                <input
+                <Grid item>
+
+                <TextField
                   className="form-input"
                   placeholder="Your username"
                   name="name"
@@ -61,7 +65,10 @@ const Signup = () => {
                   value={formState.name}
                   onChange={handleChange}
                 />
-                <input
+                </Grid>
+                <Grid item>
+
+                <TextField
                   className="form-input"
                   placeholder="Your email"
                   name="email"
@@ -69,7 +76,10 @@ const Signup = () => {
                   value={formState.email}
                   onChange={handleChange}
                 />
-                <input
+                </Grid>
+                <Grid item>
+
+                <TextField
                   className="form-input"
                   placeholder="******"
                   name="password"
@@ -77,14 +87,16 @@ const Signup = () => {
                   value={formState.password}
                   onChange={handleChange}
                 />
-                <button
-                  className="btn btn-block btn-info"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
+                </Grid>
+                
+                <Button
+                 type='submit' sx={{ height: "auto", justifyContent: 'center', width:"14em"}} variant="contained"
                 >
                   Submit
-                </button>
+                </Button>
+                
               </form>
+              </Grid>
             )}
 
             {error && (

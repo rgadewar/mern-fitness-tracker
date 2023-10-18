@@ -1,4 +1,4 @@
-// import './App.css';
+import './App.css';
 import {
   ApolloClient,
   InMemoryCache,
@@ -54,8 +54,11 @@ function App() {
           <ErrorBoundary>
               <Header />
                 <Outlet />
-              <Footer />
+                <div className='footer'>
+                <Footer />
+                </div>
           </ErrorBoundary>
+          
           {/* </ActivityProvider>
       </UserProvider> */}
         </Provider>

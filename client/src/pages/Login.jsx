@@ -70,7 +70,7 @@ const Login = (props) => {
                   value={formState.password}
                   onChange={handleChange}
                 />
-                <Button component={Link} to="/home.jsx" sx={{ width: "20", height: "auto", justifyContent: 'center' }} variant="contained">
+                <Button component={Link} to="/home.jsx" sx={{ height: "auto", justifyContent: 'center' }} variant="contained">
                   Login
                 </Button>
               </form>

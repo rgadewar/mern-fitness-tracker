@@ -24,7 +24,7 @@ const Header = () => {
               Keep your life on Track. From step to finish.</p>
             <Grid item xs={12} container justifyContent="right">
 
-              <Link href="/signup" style={{ width: "5rem", textAlign: 'right', color: 'white', fontFamily: 'Roboto' }}>
+              <Link href="/#" style={{ width: "5rem", textAlign: 'right', color: 'white', fontFamily: 'Roboto' }}>
                 About Us
               </Link>
               {Auth.loggedIn() ? (<Link href="/signup" style={{ width: "5rem", textAlign: 'right', color: 'white', fontFamily: 'Roboto' }}>
