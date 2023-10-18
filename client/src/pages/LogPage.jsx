@@ -106,10 +106,10 @@ function ShowLogPage() {
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              <MenuItem value="Biking">Biking</MenuItem>
+              {/* <MenuItem value="Biking">Biking</MenuItem>
               <MenuItem value="Running">Running</MenuItem>
               <MenuItem value="Walking">Walking</MenuItem>
-              <MenuItem value="Swimming">Swimming</MenuItem>
+              <MenuItem value="Swimming">Swimming</MenuItem> */}
               {categoryData?.categories
                 .filter((category) => category.name !== "All") // Exclude the 'All' category
                 .map((category) => (
