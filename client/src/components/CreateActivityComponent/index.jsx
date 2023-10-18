@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_NEW_ACTIVITY } from '../../utils/mutations';
-import AuthService from "../../utils/auth";
+import AuthService from '../../utils/auth';
 
 import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
 } from '@mui/material';
 
 function CreateActivityForm() {
@@ -37,11 +41,13 @@ function CreateActivityForm() {
 
   return (
     <div>
-      <h2>Create New Activity</h2>
-      {loading && <p>Creating activity...</p>}
-      {error && <p>Error: {error.message}</p>}
+      <Typography variant="h4">Create New Activity</Typography>
+      {loading && <CircularProgress />}
+      {error && <Typography color="error">Error: {error.message}</Typography>}
       {data && data.createActivity ? (
-        <p>Activity created successfully</p>
+        <Typography variant="body1" color="success">
+          Activity created successfully
+        </Typography>
       ) : null}
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth>
@@ -58,17 +64,24 @@ function CreateActivityForm() {
           </Select>
         </FormControl>
         <br />
-        <label>
-          Goal:
-          <input
-            type="number"
-            name="goal"
-            value={activityData.goal}
-            onChange={handleChange}
-          />
-        </label>
         <br />
-        <button type="submit">Create Activity</button>
+        <TextField
+          fullWidth
+          label="Goal"
+          name="goal"
+          type="number"
+          value={activityData.goal}
+          onChange={handleChange}
+        />
+        <br />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ marginTop: '1rem' }}
+        >
+          {loading ? 'Creating Activity...' : 'Create Activity'}
+        </Button>
       </form>
     </div>
   );
