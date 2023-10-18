@@ -1,9 +1,15 @@
 import React from 'react';
 import styles from './Footer.module.css';
 import { SocialIcon } from 'react-social-icons';
+import Grid from '@mui/material/Grid';
+
 const Footer = () => {
   return (
-    <div>
+<Grid container direction="column" sx={{ maxHeight: "100vh" }} >
+
+<Grid item xs={12}>
+
+    <div className={styles['footerDiv']}>
 
       <footer id="footer" className={styles['footerCard']}>
         <div >
@@ -43,6 +49,8 @@ url="www.instagram.com" target="_blank" />
       </footer>
      
     </div>
+</Grid>
+</Grid>
      
   );
 };

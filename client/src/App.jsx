@@ -52,13 +52,9 @@ function App() {
         <ActivityProvider> */}
           {/* Wrap your entire app with ErrorBoundary */}
           <ErrorBoundary>
-            <div className="flex-column justify-flex-start min-100-vh">
               <Header />
-              <div >
                 <Outlet />
-              </div>
               <Footer />
-            </div>
           </ErrorBoundary>
           {/* </ActivityProvider>
       </UserProvider> */}

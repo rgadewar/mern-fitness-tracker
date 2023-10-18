@@ -5,6 +5,7 @@ import { LOGIN_USER } from '../utils/mutations';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Auth from '../utils/auth';
+import styles from "./Login/login.module.css"
 
 const Login = (props) => {
   const [formState, setFormState] = useState({ email: '', password: '' });
@@ -42,18 +43,17 @@ const Login = (props) => {
   };
 
   return (
-    <main className="flex-row justify-center mb-4">
-      <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4>Login</h4>
-          <div className="card-body">
+    <main className={styles['background']}>
+      <div >
+        <div >
+          <div>
             {data ? (
               <p>
                 Success! You may now head{' '}
                 <Link to="/">back to the homepage.</Link>
               </p>
             ) : (
-              <form onSubmit={handleFormSubmit}>
+              <form className={styles['formInput']}onSubmit={handleFormSubmit}>
                 <TextField
                   className="form-input"
                   placeholder="Your email"
@@ -70,7 +70,7 @@ const Login = (props) => {
                   value={formState.password}
                   onChange={handleChange}
                 />
-                <Button component={Link} to="/Login/login.jsx" sx={{ width: "40%", height: "auto" }} variant="contained">
+                <Button component={Link} to="/home.jsx" sx={{ width: "20", height: "auto", justifyContent: 'center' }} variant="contained">
                   Login
                 </Button>
               </form>
