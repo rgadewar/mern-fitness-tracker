@@ -13,7 +13,7 @@ const sampleCategories = [
 const seedCategories = async () => {
   try {
     // Connect to your MongoDB database
-    await mongoose.connect('mongodb://localhost:27017/your-database-name', {
+    await mongoose.connect('mongodb://localhost:27017/mern-fitness-tracker', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
