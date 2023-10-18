@@ -84,6 +84,21 @@ const Header = () => {
                   >
                     Logout
                   </a>
+                  <a href="/aboutus">
+                <p
+                  component={Link}
+                  to="/aboutus"
+                  style={{
+                    width: "8rem",
+                    height: "auto",
+                    textAlign: "center",
+                    color: "white",
+                    fontFamily: "Roboto",
+                  }}
+                >
+                  About Us
+                </p>
+              </a>
                 </React.Fragment>
               ) : (
                 <React.Fragment>

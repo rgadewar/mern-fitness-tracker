@@ -33,12 +33,12 @@ const items = [
     caption: 'Dive into Tranquility: Swim in the Sparkling Waters and Enjoy the Sun ☀️🏊‍♂️',
     key: 4,
   },
-  {
-    src: '/assets/runTrack.jpg',
-    altText: 'Running',
-    caption: "Embrace the Outdoors: Rediscover the Joy of Biking and Stay Active 🚴‍♂️",
-    key: 5,
-  },
+  // {
+  //   src: '/assets/runTrack.jpg',
+  //   altText: 'Running',
+  //   caption: "Embrace the Outdoors: Rediscover the Joy of Biking and Stay Active 🚴‍♂️",
+  //   key: 5,
+  // },
 ];
 
 function Slider(args) {

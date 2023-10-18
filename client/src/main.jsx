@@ -8,6 +8,7 @@ import CategoryDetail from './pages/CategoryDetail';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Log from './pages/LogPage.jsx';
+import AboutUs from './pages/AboutUs.jsx';
 import ErrorPage from './pages/ErrorBoundary.jsx'; // Import your ErrorPage component
 import Slideshow from './pages/Slideshow';
 import AuthService from './utils/auth';
@@ -56,6 +57,11 @@ const router = createBrowserRouter([
         path: '/signup',
         element: <Signup />,
       },
+      {
+        path: '/aboutus',
+        element: <AboutUs />,
+      },
+
       {
         // path: '/category/:categoryId',
         path: '/category/:name',
