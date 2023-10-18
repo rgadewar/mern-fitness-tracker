@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setWeekGoal, updateWeeklyProgress } from '../Reducers/actions';
 import { SET_GOAL_MUTATION } from '../utils/mutations';
 import useActivityData from '../components/Category/CategoryDetailsUtilFunctions';
+import '../components/Category/CategoryDetails.css';
+
 
 const CategoryDetail = () => {
   const state = useSelector((state) => state);
@@ -85,7 +87,7 @@ const CategoryDetail = () => {
   };
 
   return (
-    <div className="category-detail">
+    <div className="calendar-container">
       <h1>{categoryName}</h1>
       <p>Your Progress: {state.weeklyProgress}</p>
 
@@ -101,7 +103,7 @@ const CategoryDetail = () => {
       </div>
 
       <CalendarComponent onSave={handleCalendarSave} name={categoryName} />
-      <table>
+      {/* <table>
         <thead>
           <tr>
             <th>Day</th>
@@ -116,7 +118,7 @@ const CategoryDetail = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 };

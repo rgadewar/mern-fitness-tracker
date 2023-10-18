@@ -1,0 +1,28 @@
+.headerCard {
+    background-color: black;
+}
+
+/* Add spacing between header links */
+a.header-link {
+    margin-right: 10px; /* Adjust the right margin to control spacing */
+    color: white;
+    font-family: "Roboto";
+    font-size: "30px";
+    width: 8rem;
+    height: auto;
+    text-align: center;
+    text-decoration: none; /* Remove underline */
+  }
+  
+  /* Change link background color on hover */
+  a.header-link:hover {
+    background-color: lightgray;
+    color: white;
+  }
+  
+  /* Change link background color on active (clicked) state */
+  a.header-link:active {
+    background-color: gray;
+    color: white;
+  }
+  

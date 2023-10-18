@@ -1,156 +1,159 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Auth from '../../utils/auth';
-import logoImage from '/assets/logo1.png';
-
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  Container,
-} from '@mui/material';
+import React from "react";
+import { Link } from "react-router-dom";
+import Auth from "../../utils/auth";
+import logoImage from "/assets/logo1.png";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import styles from "./header.module.css";
+import Grid from "@mui/material/Grid";
 
 const Header = () => {
+
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
   };
 
+  const isLoggedIn = Auth.loggedIn(); // Check if the user is logged in
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'teal', marginBottom: 4 }}>
-      <Container>
-        <Toolbar>
-          <Box display="flex" alignItems="center">
-            {/* <img src={logoImage} alt="Logo" style={{ height: '50px', marginRight: '10px' }} /> */}
-            <Typography variant="h4" sx={{ fontFamily: 'cursive', fontWeight: 'bold', fontSize: '3rem' }}>
-              TRACK
-            </Typography>
-          </Box>
-          <div style={{ marginLeft: 'auto' }}>
-            {Auth.loggedIn() ? (
-              <>
-                <Button
-                  component={Link}
-                  to="/"
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'green',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lightgreen',
-                    },
-                  }}
-                >
-                  Home
-                </Button>
-                <Button
-                  component={Link}
-                  to="/slideshow"
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'blue',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lightblue',
-                    },
-                  }}
-                >
-                  Slideshow
-                </Button>
-                <Button
-                  component={Link}
-                  to="/log"
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'red',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'pink',
-                    },
-                  }}
-                >
-                  Activity Logs
-                </Button>
-                <Button
-                  onClick={logout}
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'gray',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lightgray',
-                    },
-                  }}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
+    <header className={styles["headerCard"]}>
+      <Grid container  justifyContent="center">
+        <div>
+          <Grid item container justifyContent="center">
+            <p
+              className="m-0"
+              style={{
+                fontSize: "1.78rem",
+                fontWeight: "700",
+                fontFamily: "Roboto",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              Keep your life on Track. From step to finish.
+            </p>
+            <Grid item xs={12} container justifyContent="center">
+              {isLoggedIn ? ( // Check if the user is logged in
+                <React.Fragment>
+                   <a href="/">
+                    <p
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      Home
+                    </p>
+                  </a>          
+                  <a href="/log">
+                    <p
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      ActivityLog
+                    </p>
+                  </a>
+
+                  <a
+                    href="/logout" // Specify the href URL
+                    onClick={logout}
+                    style={{
+                      display: "block",
+                      width: "8rem",
+                      height: "auto",
+                      textAlign: "center",
+                      color: "white",
+                      fontFamily: "Roboto",
+                      textDecoration: "none", // Remove underline
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.backgroundColor = "lightgray")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.backgroundColor = "gray")
+                    }
+                  >
+                    Logout
+                  </a>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                    <a href="/login">
+                <p
                   component={Link}
                   to="/login"
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'green',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lightgreen',
-                    },
+                  style={{
+                    width: "8rem",
+                    height: "auto",
+                    textAlign: "center",
+                    color: "white",
+                    fontFamily: "Roboto",
                   }}
                 >
                   Login
-                </Button>
-                <Button
+                </p>
+              </a>
+              <a href="/signup">
+                <p
                   component={Link}
                   to="/signup"
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'blue',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lightblue',
-                    },
+                  style={{
+                    width: "8rem",
+                    height: "auto",
+                    textAlign: "center",
+                    color: "white",
+                    fontFamily: "Roboto",
                   }}
                 >
-                  Signup
-                </Button>
-                <Button
+                  SignUp
+                </p>
+              </a>
+                  <a href="/#">
+                <p
                   component={Link}
-                  to="/slideshow"
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: 2,
-                    backgroundColor: 'purple',
-                    transition: 'background-color 0.3s',
-                    '&:hover': {
-                      backgroundColor: 'lavender',
-                    },
+                  to="/#"
+                  style={{
+                    width: "8rem",
+                    height: "auto",
+                    textAlign: "center",
+                    color: "white",
+                    fontFamily: "Roboto",
                   }}
                 >
-                  Slideshow
-                </Button>
-              </>
-            )}
-          </div>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                  About Us
+                </p>
+              </a>
+              <a href="/">
+                    <p
+                      style={{
+                        width: "8rem",
+                        height: "auto",
+                        textAlign: "center",
+                        color: "white",
+                        fontFamily: "Roboto",
+                      }}
+                    >
+                      Home
+                    </p>
+                  </a>       
+
+              
+                </React.Fragment>
+              )}
+            </Grid>
+          </Grid>
+        </div>
+      </Grid>
+    </header>
   );
 };
 

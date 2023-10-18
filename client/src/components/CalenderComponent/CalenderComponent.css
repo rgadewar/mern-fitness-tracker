@@ -83,6 +83,11 @@
     border-radius: 50%;
   }
   
+  .custom-progress {
+    width: 300px; /* Adjust the desired width */
+    height: 40px; /* Adjust the desired height */
+    /* Additional styling properties as needed */
+  }
   
   
   

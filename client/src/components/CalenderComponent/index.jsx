@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -8,13 +7,11 @@ import { useMutation } from '@apollo/client';
 import { UPDATE_DAILY_ACHIEVEMENT } from '../../utils/mutations';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import {  GET_WEEKLY_PROGRESS } from '../../utils/queries';
+import { GET_WEEKLY_PROGRESS } from '../../utils/queries';
 import AuthService from '../../utils/auth';
-// import { useGlobalState } from '../../utils/userContext'; // Import useGlobalState from your global state context
 import { useDispatch, useSelector } from 'react-redux';
-import { updateWeeklyProgress, updateActivity } from '../../Reducers/actions'; // Import your Redux action
+import { updateWeeklyProgress, updateActivity } from '../../Reducers/actions';
 import { useCalendarFunctions } from './CalendarUtilFunctions';
-
 
 const CalendarComponent = ({ onSave, name }) => {
   const [date, setDate] = useState(new Date());
@@ -22,8 +19,8 @@ const CalendarComponent = ({ onSave, name }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [entryData, setEntryData] = useState({});
   const [goal, setGoal] = useState(100); // Initialize goal with 0
-  // const [categoryName, setCategoryName] = useState('');
   const [userProfile, setUserProfile] = useState(null);
+
   useEffect(() => {
     if (AuthService.loggedIn()) {
       const userProfile = AuthService.getProfile();
@@ -35,19 +32,18 @@ const CalendarComponent = ({ onSave, name }) => {
 
   const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
   const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
-    variables: { userId: userProfile?.data._id, name: name}, // Use optional chaining to prevent null error
+    variables: { userId: userProfile?.data._id, name: name }, // Use optional chaining to prevent null error
   });
-
 
   const state = useSelector((state) => {
-    return state
+    return state;
   });
-
 
   const dispatch = useDispatch();
   const weekGoal = state.weekGoal || 0;
-  const initialWeeklyProgress = state.initialWeeklyProgress || 0; // Use the initialWeeklyProgress from the global state
-  const activities = state.activities || []; // Get activities from the Redux state
+  const initialWeeklyProgress = state.initialWeeklyProgress || 0;
+  const activities = state.activities || [];
+
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
@@ -69,7 +65,7 @@ const CalendarComponent = ({ onSave, name }) => {
         currentDate.getMonth(),
         currentDate.getDate() + (6 - currentDate.getDay())
       );
-  
+
       if (selectedDate >= firstDayOfWeek && selectedDate <= lastDayOfWeek) {
         if (!AuthService.loggedIn()) {
           console.error('User not authenticated.');
@@ -78,42 +74,38 @@ const CalendarComponent = ({ onSave, name }) => {
         try {
           const response = await updateDailyAchievement({
             variables: {
-              name: name, // Include categoryName in the variables
+              name: name,
               date: selectedDate.toISOString(),
               value: parseFloat(value),
-              userId: userProfile.data._id, // Provide the user's ID here
+              userId: userProfile.data._id,
             },
           });
           if (response.data && response.data.updateDailyAchievement) {
-            // Update the progress bar by adding the newly added value
-            const updatedWeeklyProgress = parseFloat(weeklyProgress) + parseFloat(value);
+            const updatedWeeklyProgress =
+              parseFloat(weeklyProgress) + parseFloat(value);
 
-  
             const updatedEntryData = { ...entryData };
             updatedEntryData[selectedDate.toDateString()] = {
               progress: value,
             };
             setEntryData(updatedEntryData);
-  
+
             onSave({ date: selectedDate, value: parseFloat(value) });
             setDate(new Date());
             setValue('');
             setSelectedDate(null);
-  
-            // Push the new daily achievement to the dailyAchievements array
-              const newDailyAchievement = {
-                date: new Date(selectedDate.toDateString()),
-                value: parseFloat(value),
-                name: name,
-              };
-    
-            // Dispatch the action with just the 'value' as the payload
+
+            const newDailyAchievement = {
+              date: new Date(selectedDate.toDateString()),
+              value: parseFloat(value),
+              name: name,
+            };
+
             dispatch(updateActivity(newDailyAchievement));
             dispatch({
               type: 'UPDATE_WEEKLY_PROGRESS',
               payload: parseFloat(value),
             });
-
           } else {
             console.error(
               'Daily achievement update failed:',
@@ -133,8 +125,7 @@ const CalendarComponent = ({ onSave, name }) => {
       console.error('Selected date is not defined.');
     }
   };
-  
-  
+
   const handleSelectDate = (date) => {
     setSelectedDate(date);
     setValue(entryData[date.toDateString()]?.progress || '');
@@ -173,7 +164,7 @@ const CalendarComponent = ({ onSave, name }) => {
 
   return (
     <div>
-      {userProfile ? ( // Check if userProfile is available
+      {userProfile ? (
         <div>
           <h2>Calendar</h2>
           <div>
@@ -197,11 +188,7 @@ const CalendarComponent = ({ onSave, name }) => {
                   value={value}
                   onChange={handleValueChange}
                 />
-                <button
-                  onClick={handleSave}
-                >
-                  Save
-                </button>
+                <button onClick={handleSave}>Save</button>
               </div>
             )}
           </div>
@@ -209,8 +196,8 @@ const CalendarComponent = ({ onSave, name }) => {
             <h3>Weekly Progress</h3>
             <div>
               <p>Goal: {weekGoal}</p>
-              <p>Your Progress: {state.weeklyProgress}</p>
-              <progress max={weekGoal} value={state.weeklyProgress} />
+              <p>Your Progress: {weeklyProgress}</p>
+              <progress className="custom-progress" max={weekGoal} value={weeklyProgress} />
             </div>
           </div>
         </div>

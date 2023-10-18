@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES } from '../utils/queries';
 import { idbPromise } from '../utils/indexedDB'; // Import the function
 import AuthService from '../utils/auth';
+import Slider from './Slideshow'; 
 
 import {
   Card,
@@ -41,7 +42,8 @@ const Home = () => {
         ) : (
           <Typography variant="h4">Welcome!</Typography>
         )}
-     
+        {/* Render the Slider component here */}
+        <Slider />
           {loading ? (
             <div className="loading-message">Loading...</div>
           ) : categories.length === 0 ? (
