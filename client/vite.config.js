@@ -13,7 +13,15 @@ export default defineConfig({
         secure: false,
       },
     },
-  }
+  },
+  css: {
+    preprocessorOptions: {
+      // Include your custom Bootstrap CSS file
+      scss: {
+        additionalData: `@import "./src/custom-bootstrap.css";`,
+      },
+    },
+  },
   // optimizeDeps: {
   //   include: ['chart.js', 'chartjs-adapter-moment'],
   // },
