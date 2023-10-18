@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.13",
     "apollo-server-errors": "^3.3.1",
+    "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.1",
     "chartjs-adapter-moment": "^1.0.1",
     "dotenv": "^16.3.1",
