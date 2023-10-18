@@ -101,6 +101,7 @@ function ShowLogPage() {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
           <FormControl fullWidth>
+            <br />
             <InputLabel>Select Category</InputLabel>
             <Select
               value={selectedCategory}

@@ -12,7 +12,7 @@ import {
 function MyLineChart({ data }) {
   return (
     <div className="App">
-      <h1>Recharts Line Chart Example</h1>
+      <h1>User's Progress Chart</h1>
       <LineChart width={600} height={300} data={data}>
         <XAxis dataKey="date" />
         <YAxis />
