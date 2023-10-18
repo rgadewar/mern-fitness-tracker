@@ -8,7 +8,7 @@ import {
 import CalendarComponent from '../components/CalenderComponent';
 import AuthService from '../utils/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWeekGoal, updateWeeklyProgress } from '../Reducers/actions';
+import { setWeekGoal, updateWeeklyProgress, resetState } from '../Reducers/actions';
 import { SET_GOAL_MUTATION } from '../utils/mutations';
 import useActivityData from '../components/Category/CategoryDetailsUtilFunctions';
 import '../components/Category/CategoryDetails.css';
@@ -27,52 +27,48 @@ const CategoryDetail = () => {
   }, [name]);
 
   const userProfile = AuthService.getProfile();
+   // Inside your authentication logic, after a new user logs in
+const handleNewUserLogin = (userProfile) => {
+  const dispatch = useDispatch();
 
-  // Use the custom hook to get the required data
-  const {
-    activityIdData,
-    activityIdLoading,
-    data: activityGoalData,
-    activityGoalLoading,
-    setGoalMutation,
-  } = useActivityData(userProfile, categoryName, dispatch);
+  // Reset the Redux state when a new user logs in
+  dispatch(resetState());
 
-  // Define your GET_WEEKLY_PROGRESS query
-  const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
+  // Perform any other actions related to the new user
+  // For example, you might set the user profile in Redux or perform other initialization.
+  dispatch(setUser(userProfile));
+};
+  
+  
+
+ // Define your GET_WEEKLY_PROGRESS query
+const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
+  variables: {
+    userId: userProfile?.data._id,
+    name: categoryName ? categoryName : null,
+  },
+  onCompleted: (data) => {
+    console.log('Data from GET_WEEKLY_PROGRESS query:', data); // Log the data
+    dispatch(updateWeeklyProgress(data.weeklyProgress));
+  },
+});
+
+
+  
+  const { data: goalData, loading: goalLoading} = useQuery(GET_USER_WEEKLY_GOAL, {
     variables: {
       userId: userProfile?.data._id,
       name: categoryName ? categoryName : null,
     },
     onCompleted: (data) => {
-      dispatch(updateWeeklyProgress(data.weeklyProgress));
+      if (data && data.setWeekGoal !== null) {
+        
+        console.log('GET_USER_WEEKLY_GOAL:', data); // Log the data
+        dispatch(setWeekGoal(data.getUserWeeklyGoal));
+      }
     },
   });
-
-  const handleGoalSubmit = async () => {
-    try {
-      if (!categoryName) {
-        console.log('Category name is not available yet...');
-        return;
-      }
-
-      if (!activityIdData || !activityIdData.activityIdByName) {
-        console.log('Activity ID is not available yet...');
-        return;
-      }
-
-      const { data } = await setGoalMutation({
-        variables: {
-          userId: userProfile?.data._id,
-          activityId: activityIdData.activityIdByName,
-          goal: parseFloat(state.weekGoal),
-        },
-      });
-
-      console.log('Mutation result:', data);
-    } catch (error) {
-      console.error('Mutation error:', error);
-    }
-  };
+  
 
   const [tableData, setTableData] = useState([]);
 
@@ -92,14 +88,7 @@ const CategoryDetail = () => {
       <p>Your Progress: {state.weeklyProgress}</p>
 
       <div>
-        <label htmlFor="weekGoal">Weekly Goal: </label>
-        <input
-          type="number"
-          id="weekGoal"
-          value={state.weekGoal}
-          onChange={(e) => dispatch(setWeekGoal(Number(e.target.value)))}
-        />
-        <button onClick={handleGoalSubmit}>Set Goal</button>
+        <label htmlFor="weekGoal">Weekly Goal: {state.weekGoal} </label>
       </div>
 
       <CalendarComponent onSave={handleCalendarSave} name={categoryName} />

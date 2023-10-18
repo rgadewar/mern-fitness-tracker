@@ -30,6 +30,8 @@ const CalendarComponent = ({ onSave, name }) => {
     }
   }, []);
 
+ 
+
   const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
   const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
     variables: { userId: userProfile?.data._id, name: name }, // Use optional chaining to prevent null error
@@ -196,8 +198,8 @@ const CalendarComponent = ({ onSave, name }) => {
             <h3>Weekly Progress</h3>
             <div>
               <p>Goal: {weekGoal}</p>
-              <p>Your Progress: {weeklyProgress}</p>
-              <progress className="custom-progress" max={weekGoal} value={weeklyProgress} />
+              <p>Your Progress: {state.weeklyProgress}</p>
+              <progress className="custom-progress" max={weekGoal} value={state.weeklyProgress} />
             </div>
           </div>
         </div>

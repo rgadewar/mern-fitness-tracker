@@ -13,35 +13,25 @@ const items = [
     src: '/assets/biking.jpg',
     altText: 'biking',
     caption: "Embrace the Outdoors: Rediscover the Joy of Biking and Stay Active 🚴‍♂️",
-    key: 1,
   },
   {
     src: '/assets/running.jpg',
     altText: 'running',
     caption: "Feel the Freedom: Run Alongside Nature and Embrace the Sun ☀️🏃‍♀️",
-    key: 2,
   },
   {
     src: '/assets/walking.jpg',
     altText: 'walking',
     caption: "Embrace Serenity: Walk in Nature's Beauty and Soak Up the Sun ☀️🚶‍♂️",
-    key: 3,
   },
   {
     src: '/assets/swimming.jpg',
     altText: 'swimming',
     caption: 'Dive into Tranquility: Swim in the Sparkling Waters and Enjoy the Sun ☀️🏊‍♂️',
-    key: 4,
   },
-  // {
-  //   src: '/assets/runTrack.jpg',
-  //   altText: 'Running',
-  //   caption: "Embrace the Outdoors: Rediscover the Joy of Biking and Stay Active 🚴‍♂️",
-  //   key: 5,
-  // },
 ];
 
-function Slider(args) {
+function Slider() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
 
@@ -62,29 +52,27 @@ function Slider(args) {
     setActiveIndex(newIndex);
   };
 
-  const slides = items.map((item) => {
-    return (
-      <CarouselItem
-        onExiting={() => setAnimating(true)}
-        onExited={() => setAnimating(false)}
-        key={item.src}
-      >
-        <img
-          src={item.src}
-          alt={item.altText}
-          style={{ display: 'block', margin: '0 auto' }} // Center the image
-        />
-        <CarouselCaption captionHeader={item.caption} />
-      </CarouselItem>
-    );
-  });
+  const slides = items.map((item, index) => (
+    <CarouselItem
+      onExiting={() => setAnimating(true)}
+      onExited={() => setAnimating(false)}
+      key={index} // Use the index as the key since src might not be unique
+    >
+      <img
+        src={item.src}
+        alt={item.altText}
+        style={{ display: 'block', margin: '0 auto' }} // Center the image
+      />
+      <CarouselCaption captionText={item.caption} /> {/* Use captionText for the caption */}
+    </CarouselItem>
+  ));
 
   return (
     <Carousel
       activeIndex={activeIndex}
       next={next}
       previous={previous}
-      {...args}
+      interval={5000} // Set the interval (time between slides) in milliseconds
       style={{ margin: '0 auto' }} // Center the entire carousel
     >
       <CarouselIndicators

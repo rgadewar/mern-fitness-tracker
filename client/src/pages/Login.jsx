@@ -46,8 +46,13 @@ const Login = (props) => {
     <Grid container spacing={2}>
       {/* Left Column - Slider */}
       <Grid item xs={12} sm={8}>
-        <Slider />
-      </Grid>
+      <Slider />
+      {/* <img
+        src="/assets/running.jpg"  // Replace with the actual path to your image
+        alt="RunTrack"
+        style={{ width: '100%', height: 'auto' }}  // Adjust width and height as needed
+      /> */}
+</Grid>
 
       {/* Right Column - Login Form */}
       <Grid item xs={12} sm={4}>

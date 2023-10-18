@@ -9,7 +9,7 @@ export const SET_WEEK_GOAL = 'SET_WEEK_GOAL';
 export const UPDATE_WEEKLY_PROGRESS = 'UPDATE_WEEKLY_PROGRESS';
 export const SET_TABLE_DATA = 'SET_TABLE_DATA';
 export const RESET_STATE = 'RESET_STATE';
-
+export const GET_WEEK_GOAL = 'SET_WEEK_GOAL';
 
 // Action creators
 export const fetchActivities = (activities) => ({
@@ -41,6 +41,11 @@ export const updateWeeklyProgress = (value) => ({
 // Action creator for setting week goal
 export const setWeekGoal = (goal) => ({
   type: SET_WEEK_GOAL,
+  payload: goal,
+});
+
+export const getWeekGoal = (goal) => ({
+  type: GET_WEEK_GOAL,
   payload: goal,
 });
 

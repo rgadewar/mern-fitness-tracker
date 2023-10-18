@@ -44,6 +44,11 @@ const typeDefs = `
     name: String!
   }
 
+  input CreateActivityInput {
+    name: String!
+    goal: Float!
+    userId: ID!
+  }
   type Query {
     users: [User]!
     user(userId: ID!): User
@@ -58,7 +63,7 @@ const typeDefs = `
     activityIdByName(userId: ID!, name: String!): ID
     getUserActivities(userId: ID!): [Activity]!
   
-    getUserWeeklyGoal(userId: ID!, name: String!): Int # Use the ActivityName enum here
+    getUserWeeklyGoal(userId: ID!, name: String!): Int 
     
     
   }
@@ -71,13 +76,13 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateDailyAchievement(
-      name: ActivityName!
+      name: String!
       date: String!
       value: Float!
       userId: ID!
     ): UpdateDailyAchievementResponse
     setGoal(userId: ID!, activityId: ID!, goal: Float!): Activity
-    createActivity(name: ActivityName!, goal: Float!): Activity # Use the ActivityName enum here
+    createActivity(input: CreateActivityInput!): Activity
   }
   
  

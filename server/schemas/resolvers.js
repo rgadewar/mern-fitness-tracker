@@ -151,23 +151,22 @@ const resolvers = {
       }
     },
 
-    getUserWeeklyGoal: async (_, { userId, name }) => {
+    getUserWeeklyGoal: async (_, { userId, name }, context) => {
       try {
-        const user = await User.findById(userId).populate('activities');
-        if (!user) {
-          throw new Error('User not found');
-        }
-  
-        const activity = user.activities.find((act) => act.name === name);
+        // Query the Activity table to find the activity by name and user ID
+        const activity = await Activity.findOne({ user: userId, name });
+    
         if (!activity) {
           throw new Error('Activity not found');
         }
-  
+    
         return activity.goal; // Assuming that the goal is the weekly goal
       } catch (error) {
         throw new Error('Failed to fetch user weekly goal: ' + error.message);
       }
     },
+    
+    
   },
 
   Mutation: {
@@ -231,7 +230,7 @@ const resolvers = {
               user: context.user._id,
             });
     
-            console.log(`Created a new activity: ${activity.name} for user ID ${context.user._id}`);
+            console.log(`Created a new activity: ${name} for user ID ${context.user._id}`);
           }
         }
     
@@ -299,7 +298,45 @@ const resolvers = {
       }
     },
     
+    createActivity: async (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not logged in');
+      }
+
+      try {
+        const { name, goal } = args.input;
+        const userId = context.user._id;
+
+        // Check if an activity with the given name already exists for the user
+        let activity = await Activity.findOne({ name, user: userId });
+
+        if (activity) {
+          // Activity with the same name already exists; update its goal
+          activity.goal = goal;
     
+          // Save the updated activity to the database
+          const updatedActivity = await activity.save();
+    
+          return updatedActivity;
+        }
+
+        // Create a new activity if it doesn't exist
+        activity = new Activity({
+          name,
+          goal,
+          user: userId,
+          dailyAchievements: [], // You can initialize with an empty array
+        });
+
+        // Save the new activity to the database
+        const createdActivity = await activity.save();
+
+        return createdActivity;
+      } catch (error) {
+        throw new Error('Failed to create the activity: ' + error.message);
+      }
+    },
+
 
 
   },

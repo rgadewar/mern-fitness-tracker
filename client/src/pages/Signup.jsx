@@ -46,6 +46,11 @@ const Signup = () => {
       {/* Left Column - Slider */}
       <Grid item xs={12} sm={8}>
         <Slider />
+        {/* <img
+        src="/assets/walking.jpg"  // Replace with the actual path to your image
+        alt="RunTrack"
+        style={{ width: '100%', height: 'auto' }}  // Adjust width and height as needed
+      /> */}
       </Grid>
     {/* Right Column - Signup Form */}
     <Grid item xs={12} sm={4}>
