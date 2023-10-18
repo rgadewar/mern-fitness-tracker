@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_NEW_ACTIVITY } from '../../utils/mutations';
 import AuthService from '../../utils/auth';
-
+import { Snackbar, Alert } from '@mui/material';
 import {
   FormControl,
   InputLabel,
@@ -23,6 +23,8 @@ function CreateActivityForm() {
   });
 
   const [createActivity, { loading, error, data }] = useMutation(CREATE_NEW_ACTIVITY);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,18 +39,19 @@ function CreateActivityForm() {
     createActivity({
       variables: { input: activityData },
     });
-  };
+    setSnackbarMsg('Added activity');
+    setOpenSnackbar(true);
+
+    setTimeout(() => {
+      setOpenSnackbar(false);
+    }, 3000);
+  }
 
   return (
     <div>
       <Typography variant="h4">Create New Activity</Typography>
       {loading && <CircularProgress />}
       {error && <Typography color="error">Error: {error.message}</Typography>}
-      {data && data.createActivity ? (
-        <Typography variant="body1" color="success">
-          Activity created successfully
-        </Typography>
-      ) : null}
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth>
           <InputLabel>Select Activity Name</InputLabel>
@@ -83,6 +86,16 @@ function CreateActivityForm() {
           {loading ? 'Creating Activity...' : 'Create Activity'}
         </Button>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert severity="success" onClose={() => setOpenSnackbar(false)}>
+          {snackbarMsg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
