@@ -2,6 +2,22 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
     components: {
+        MuiTextField: {
+        styleOverrides:{
+            root:{
+                borderRadius: '8px',
+                backgroundColor: 'white',
+                margin: "1rem",
+                display: "grid",
+                boxSizing: "border-box",
+                width: "fit-content",
+                justifyContent: "center",
+                alignContent: "center",
+                
+            }
+        }
+    }
+  ,
         MuiLink: {
             styleOverrides:{
                 root:{
@@ -18,7 +34,7 @@ const theme = createTheme({
                     color: 'black',
                     borderRadius: '8px',
                     margin: "1rem",
-                    fontFamily: "Roboto"
+                    fontFamily: "Roboto",
                 }
             }
 
