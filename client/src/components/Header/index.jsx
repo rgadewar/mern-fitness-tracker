@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
-import logoImage from "/assets/logo1.png";
+import logoImage from '/assets/Logo2.png';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import styles from "./header.module.css";
 import Grid from "@mui/material/Grid";
-// import { ReactComponent as Logo } from '../assets/Logo2.jpg'; //
+// import { ReactComponent as Logo } from '../assets/Logo2.png';
 
 const Header = () => {
   const logout = (event) => {
@@ -29,7 +29,7 @@ const Header = () => {
                   marginRight: '30px',
                 }}
               >
-                 <a href="/"> {/* Add an anchor tag with the homepage URL */}
+                 <a href="/" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <img
                     src={logoImage} // Use the imported logoImage
                     alt="Logo"
