@@ -18,7 +18,7 @@ function CreateActivityForm() {
   const userProfile = AuthService.getProfile();
   const [activityData, setActivityData] = useState({
     name: '',
-    goal: 0,
+    goal: 100,
     userId: userProfile ? userProfile.data._id : null,
   });
 

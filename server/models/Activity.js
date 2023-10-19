@@ -10,6 +10,7 @@ const activitySchema = new mongoose.Schema({
   goal: {
     type: Number,
     required: true,
+    default: 100, 
   },
   dailyAchievements: [
     {
