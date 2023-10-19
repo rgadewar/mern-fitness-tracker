@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_NEW_ACTIVITY } from '../../utils/mutations';
 import AuthService from '../../utils/auth';
+import { useDispatch, useSelector } from 'react-redux'; // Import both useDispatch and useSelector from react-redux
+import { addActivity } from '../../Reducers/actions'; // Import your addActivity action creator
 import { Snackbar, Alert } from '@mui/material';
 import {
   FormControl,
@@ -21,10 +23,12 @@ function CreateActivityForm() {
     goal: 0,
     userId: userProfile ? userProfile.data._id : null,
   });
-
-  const [createActivity, { loading, error, data }] = useMutation(CREATE_NEW_ACTIVITY);
+  const activities = useSelector((state) => state.activities);
+  const [createActivity, { loading, error }] = useMutation(CREATE_NEW_ACTIVITY);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState('');
+
+  const dispatch = useDispatch(); // Get access to the dispatch function
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,13 +42,18 @@ function CreateActivityForm() {
     e.preventDefault();
     createActivity({
       variables: { input: activityData },
-    });
-    setSnackbarMsg('Added activity');
-    setOpenSnackbar(true);
+    }).then((response) => {
+      if (response.data) {
+        const newActivity = response.data.createActivity; // Adjust this based on your GraphQL response structure
+        dispatch(addActivity(newActivity)); // Dispatch the addActivity action
+      }
+      setSnackbarMsg('Added activity');
+      setOpenSnackbar(true);
 
-    setTimeout(() => {
-      setOpenSnackbar(false);
-    }, 3000);
+      setTimeout(() => {
+        setOpenSnackbar(false);
+      }, 3000);
+    });
   }
 
   return (

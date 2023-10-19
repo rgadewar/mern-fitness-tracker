@@ -4,15 +4,23 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { GET_USER_ACTIVITIES } from '../../utils/queries';
 import AuthService from '../../utils/auth';
 import { DELETE_ACTIVITY } from '../../utils/mutations';
+import { useDispatch, useSelector } from 'react-redux'; // Import both useDispatch and useSelector from react-redux
+import { fetchActivities } from '../../Reducers/actions'; 
 
 const UserActivities = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [userActivities, setUserActivities] = useState([]); 
+  const dispatch = useDispatch();
 
   const { loading, data, refetch } = useQuery(GET_USER_ACTIVITIES, {
     variables: { userId: userProfile ? userProfile.data._id : null },
   });
 
+  useEffect(() => {
+    if (data && data.getUserActivities) {
+      dispatch(fetchActivities(data.getUserActivities.activities)); 
+    }
+  }, [data, dispatch]);
   useEffect(() => {
     if (AuthService.loggedIn()) {
       const userProfile = AuthService.getProfile();
