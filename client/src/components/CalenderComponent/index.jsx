@@ -166,47 +166,45 @@ const CalendarComponent = ({ onSave, name }) => {
 
   return (
     <div>
-      {userProfile ? (
+  {userProfile ? (
+    <div>
+      <h2>Calendar</h2>
+      <p style={{ color: 'blue' }}>Please click the date to track the activity for the current week</p>
+      <div>
+        <Calendar
+          onChange={handleDateChange}
+          value={date}
+          onClickDay={handleSelectDate}
+          tileContent={({ date }) => {
+            return <div>{/* You can add content here */}</div>;
+          }}
+          tileClassName={tileClassName}
+        />
+      </div>
+      <div>
+        <p>Selected Date: {selectedDate ? selectedDate.toLocaleDateString() : 'No date selected'}</p>
+        <input
+          type="text"
+          placeholder="Enter value"
+          value={value}
+          onChange={handleValueChange}
+        />
+        <button onClick={handleSave}>Save</button>
+      </div>
+      <div>
+        <h3>Weekly Progress</h3>
         <div>
-          <h2>Calendar</h2>
-          <div>
-            <Calendar
-              onChange={handleDateChange}
-              value={date}
-              onClickDay={handleSelectDate}
-              tileContent={({ date }) => {
-                return <div>{/* You can add content here */}</div>;
-              }}
-              tileClassName={tileClassName}
-            />
-          </div>
-          <div>
-            {selectedDate && (
-              <div>
-                <p>Selected Date: {selectedDate.toLocaleDateString()}</p>
-                <input
-                  type="text"
-                  placeholder="Enter value"
-                  value={value}
-                  onChange={handleValueChange}
-                />
-                <button onClick={handleSave}>Save</button>
-              </div>
-            )}
-          </div>
-          <div>
-            <h3>Weekly Progress</h3>
-            <div>
-              <p>Goal: {weekGoal}</p>
-              <p>Your Progress: {state.weeklyProgress}</p>
-              <progress className="custom-progress" max={weekGoal} value={state.weeklyProgress} />
-            </div>
-          </div>
+          <p>Goal: {weekGoal}</p>
+          <p>Your Progress: {state.weeklyProgress}</p>
+          <progress className="custom-progress" max={weekGoal} value={state.weeklyProgress} />
         </div>
-      ) : (
-        <p>Loading user profile...</p>
-      )}
+      </div>
     </div>
+  ) : (
+    <p>Loading user profile...</p>
+  )}
+</div>
+
   );
 };
 

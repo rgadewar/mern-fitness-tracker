@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Log from './pages/LogPage.jsx';
 import AboutUs from './pages/AboutUs.jsx';
+// import Donation from './pages/Donations.jsx';
 import ErrorPage from './pages/ErrorBoundary.jsx'; // Import your ErrorPage component
 import Slideshow from './pages/Slideshow';
 import AuthService from './utils/auth';
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
         path: '/log',
         element: AuthService.loggedIn() ? <Log /> : <Login />,
       },
+      // {
+      //   path: '/donation',
+      //   element: <Donation />,
+      // },
     ],
   },
   // Catch-all route for handling unknown routes (404)

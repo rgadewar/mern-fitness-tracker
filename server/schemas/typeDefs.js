@@ -62,7 +62,7 @@ const typeDefs = `
     getDailyAchievements(userId: ID!, name: String!, startDate: String!, endDate: String!): [DailyAchievement]
     activityIdByName(userId: ID!, name: String!): ID
     getUserActivities(userId: ID!): [Activity]!
-  
+    getTrackedActivitiesForCurrentWeek: [Activity] 
     getUserWeeklyGoal(userId: ID!, name: String!): Int 
     
     
