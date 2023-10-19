@@ -12,9 +12,13 @@
 
 [User Experience](#user-experience)
 
+[App working example](#app-working-example)
+
 [Contributing](#contributing)
 
 [Technologies Used](#technologies-used)
+
+[Usage](#usage)
 
 [Questions](#questions)
 
@@ -25,6 +29,7 @@
 <a name="installation"></a>
 
  <p> The link to the deployed application will take you directly to the site! </p>
+
 
 ## User Experience
  
@@ -37,6 +42,9 @@ A user's goal consists of a distance in miles and a timeframe in days. Once the 
 The user's goal will display a progress bar that dynamically changes to reflect how much of their goal they have completed.
 
 The user may close a goal at any time, at which point the goal will be closed to edits and saved in the _Previous Goals_ list which can be viewed by scrolling down on the page.</p>
+
+## App working example
+[Video Link](https://drive.google.com/file/d/1wLAcQu9E04seL2sNGUIiUATJ1ePZXqFw/view)
 
 ## Contributing
 
@@ -90,6 +98,32 @@ To run tests, run the following command:
 npm install
 
           npm run develop
+
+Below are the screenshots of the walkthrough for fitness tracker.
+- When the user load onto the website, sees login screen
+
+  ![alt text](./client/public/assets/login.png)
+
+
+- If user dow not have account, can click on signup screen
+
+  ![alt text](./client/public/assets/signup.png)
+
+- Home screen for adding category and updating category buttons
+
+  ![alt text](./client/public/assets/home.png)
+
+- Updating activity or tracking activity
+
+  ![alt text](./client/public/assets/track_activity.png)
+
+- User activity log by category
+
+  ![alt text](./client/public/assets/log.png)
+
+- About Us page
+
+  ![alt text](./client/public/assets/aboutus.png)
 
 ## License
 
