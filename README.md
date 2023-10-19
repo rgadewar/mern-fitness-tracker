@@ -125,6 +125,10 @@ Below are the screenshots of the walkthrough for fitness tracker.
 
   ![alt text](./client/public/assets/aboutus.png)
 
+- Mobile View 
+  ![alt text](./client/public/assets/Mobile.png)
+
+
 ## License
 
 <a name="license"></a>
