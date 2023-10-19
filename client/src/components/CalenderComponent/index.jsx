@@ -169,6 +169,7 @@ const CalendarComponent = ({ onSave, name }) => {
       {userProfile ? (
         <div>
           <h2>Calendar</h2>
+          <p style={{ color: 'blue' }}>Please click the date to track the activity for the current week</p>
           <div>
             <Calendar
               onChange={handleDateChange}

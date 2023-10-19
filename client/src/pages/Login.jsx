@@ -24,23 +24,31 @@ const Login = (props) => {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(formState);
+  
+    // Convert the email to lowercase before further processing
+    const lowercaseEmail = formState.email.toLowerCase();
+    console.log("lowercaseEmail", lowercaseEmail);
+  
     try {
       const { data } = await login({
-        variables: { ...formState },
+        variables: {
+          ...formState,
+          email: lowercaseEmail, // Ensure the lowercase email is sent
+        },
       });
-
+  
       Auth.login(data.login.token);
     } catch (e) {
       console.error(e);
     }
-
-    // clear form values
+  
+    // Clear form values
     setFormState({
       email: '',
       password: '',
     });
   };
+  
 
   return (
     <Grid container spacing={2}>
