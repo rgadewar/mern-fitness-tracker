@@ -61,9 +61,9 @@ const typeDefs = `
     activityByUserId(userId: ID!): Activity
     getDailyAchievements(userId: ID!, name: String!, startDate: String!, endDate: String!): [DailyAchievement]
     activityIdByName(userId: ID!, name: String!): ID
-    getUserActivities(userId: ID!): [Activity]!
     getTrackedActivitiesForCurrentWeek: [Activity] 
     getUserWeeklyGoal(userId: ID!, name: String!): Int 
+    getUserActivities(userId: ID!): User
     
     
   }
@@ -83,6 +83,7 @@ const typeDefs = `
     ): UpdateDailyAchievementResponse
     setGoal(userId: ID!, activityId: ID!, goal: Float!): Activity
     createActivity(input: CreateActivityInput!): Activity
+    deleteActivity(activityId: ID!): Activity
   }
   
  

@@ -139,18 +139,29 @@ const resolvers = {
       return activity._id;
     },
 
-    getUserActivities: async (parent, args, context, info) => {
+    getUserActivities: async (_, { userId }, context) => {
       try {
-        const user = await User.findById(args.userId).populate("activities");
-        if (!user) {
-          throw new Error("User not found");
+        if (!context.user) {
+          throw new AuthenticationError("Not logged in");
         }
-        console.log("user.activities", user.activities);
-        return user.activities;
+    
+        const user = await User.findById(userId).populate('activities');
+    
+        // Check if the user and user.activities are defined
+        if (!user || !user.activities) {
+          // Handle the case where user or activities are undefined
+          return null;
+        }
+    
+        // Log user activities for debugging
+        console.log('User Activities:', user.activities);
+    
+        return user;
       } catch (error) {
-        throw new Error(`Error fetching user activities: ${error.message}`);
+        throw new Error('Failed to get user activities: ' + error.message);
       }
     },
+    
 
     getUserWeeklyGoal: async (_, { userId, name }, context) => {
       try {
@@ -396,7 +407,34 @@ const resolvers = {
       } catch (error) {
         throw new Error("Failed to create/update the activity: " + error.message);
       }
-    }
+    },
+
+    deleteActivity: async (_, { activityId }, context) => {
+      try {
+        if (!context.user) {
+          throw new AuthenticationError('Not logged in');
+        }
+
+        // Find the activity by its ID
+        const activity = await Activity.findById(activityId);
+
+        if (!activity) {
+          throw new UserInputError('Activity not found');
+        }
+
+        // Ensure the logged-in user is the owner of the activity
+        if (activity.user.toString() !== context.user._id.toString()) {
+          throw new AuthenticationError('You are not the owner of this activity');
+        }
+
+        // Delete the activity
+        await Activity.findByIdAndDelete(activityId);
+
+        return activity;
+      } catch (error) {
+        throw new Error('Failed to delete activity: ' + error.message);
+      }
+    },
     
   },
 };

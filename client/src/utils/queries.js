@@ -56,3 +56,16 @@ query Query($userId: ID!, $name: String!) {
   getUserWeeklyGoal(userId: $userId, name: $name)
 }
 `;
+
+export const GET_USER_ACTIVITIES = gql`
+query($userId: ID!) {
+  getUserActivities(userId: $userId) {
+    _id
+    activities {
+      _id
+      name
+      goal
+    }
+  }
+}
+`;

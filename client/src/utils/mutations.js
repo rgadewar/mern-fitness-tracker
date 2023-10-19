@@ -52,3 +52,11 @@ mutation CreateNewActivity($input: CreateActivityInput!) {
   }
 }
 `;
+
+export const DELETE_ACTIVITY = gql`
+mutation DeleteActivity($activityId: ID!) {
+  deleteActivity(activityId: $activityId) {
+    _id
+  }
+}
+`;

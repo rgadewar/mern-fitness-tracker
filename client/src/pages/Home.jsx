@@ -4,8 +4,8 @@ import { GET_CATEGORIES } from '../utils/queries';
 import { idbPromise } from '../utils/indexedDB';
 import AuthService from '../utils/auth';
 import Slider from './Slideshow';
-import CreateActivityForm from '../components/CreateActivityComponent'; // Import the CreateActivityForm component
-// import CreateCategoryComponent from './CreateCategoryComponent'; // Import the CreateCategoryComponent component
+import CreateActivityForm from '../components/CreateActivityComponent'; 
+import UserActivities from '../components/UserActivities';
 
 import {
   Grid,
@@ -22,6 +22,7 @@ const Home = () => {
   const categories = data?.categories || [];
   const [userProfile, setUserProfile] = useState(null);
   const [createCategoryVisible, setCreateCategoryVisible] = useState(false);
+  const [userActivities, setUserActivities] = useState([]); // State to store user activities
 
   useEffect(() => {
     if (AuthService.loggedIn()) {
@@ -38,17 +39,24 @@ const Home = () => {
     setCreateCategoryVisible(!createCategoryVisible);
   };
 
+  // Function to update userActivities state when a new activity is added
+  const handleActivityAdded = (newActivity) => {
+    setUserActivities([...userActivities, newActivity]);
+  };
+
   return (
     <main>
       <div className="home-container">
         <Grid container spacing={3}>
-          {/* First row for the slider */}
           <Grid item xs={12}>
             <Slider />
           </Grid>
-          {/* Second row with two columns */}
           <Grid item xs={6}>
-            <CreateActivityForm />
+            {/* Pass handleActivityAdded function to CreateActivityForm */}
+            <CreateActivityForm onActivityAdded={handleActivityAdded} />
+            <br />
+            <br />
+            <UserActivities userActivities={userActivities} />
           </Grid>
           <Grid item xs={6}>
             <div className="category-list">
