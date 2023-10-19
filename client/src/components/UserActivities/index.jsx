@@ -36,25 +36,24 @@ const UserActivities = () => {
   }, [data]);
 
   const [deleteActivityMutation] = useMutation(DELETE_ACTIVITY);
-  const handleDeleteActivity = (activityId) => {
-    // Call the deleteActivityMutation to delete the activity
-    deleteActivityMutation({ variables: { activityId } })
-      .then((response) => {
-        if (response.data && response.data.deleteActivity) {
-          // Assuming the deletion was successful, update the userActivities state
-          const updatedUserActivities = userActivities.filter(
-            (activity) => activity._id !== activityId
-          );
-          setUserActivities(updatedUserActivities);
-        } else {
-          // Handle other success cases or provide feedback
-          console.log("Deletion was not successful");
-        }
-      })
-      .catch((error) => {
-        // Handle errors and provide feedback to the user
-        console.error("Error deleting activity:", error);
-      });
+  const handleDeleteActivity = async (activityId) => {
+    try {
+      const response = await deleteActivityMutation({ variables: { activityId } });
+  
+      if (response.data && response.data.deleteActivity) {
+        // Assuming the deletion was successful, update the userActivities state
+        const updatedUserActivities = userActivities.filter(
+          (activity) => activity._id !== activityId
+        );
+        setUserActivities(updatedUserActivities);
+      } else {
+        // Handle other success cases or provide feedback
+        console.log("Deletion was not successful");
+      }
+    } catch (error) {
+      // Handle errors and provide feedback to the user
+      console.error("Error deleting activity:", error);
+    }
   };
   
 
