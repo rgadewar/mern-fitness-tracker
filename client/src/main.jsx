@@ -1,19 +1,23 @@
-import ReactDOM from 'react-dom/client';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Route, Routes, Outlet } from 'react-router-dom';
+import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Routes,
+  Outlet,
+} from "react-router-dom";
 
-import App from './App.jsx';
-import Home from './pages/Home';
-import CategoryDetail from './pages/CategoryDetail';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import Log from './pages/LogPage.jsx';
-import AboutUs from './pages/AboutUs.jsx';
-import ErrorPage from './pages/ErrorBoundary.jsx'; // Import your ErrorPage component
-import Slideshow from './pages/Slideshow';
-import AuthService from './utils/auth';
-
-
+import App from "./App.jsx";
+import Home from "./pages/Home";
+import CategoryDetail from "./pages/CategoryDetail";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Log from "./pages/LogPage.jsx";
+import AboutUs from "./pages/AboutUs.jsx";
+import ErrorPage from "./pages/ErrorBoundary.jsx"; // Import your ErrorPage component
+import Slideshow from "./pages/Slideshow";
+import AuthService from "./utils/auth";
 
 // Import the service worker module
 // import { Workbox } from 'workbox-window';
@@ -42,7 +46,7 @@ import AuthService from './utils/auth';
 // }
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
       {
@@ -50,40 +54,40 @@ const router = createBrowserRouter([
         element: AuthService.loggedIn() ? <Home /> : <Login />,
       },
       {
-        path: '/login',
+        path: "/login",
         element: <Login />,
       },
       {
-        path: '/signup',
+        path: "/signup",
         element: <Signup />,
       },
       {
-        path: '/aboutus',
+        path: "/aboutus",
         element: <AboutUs />,
       },
 
       {
-        // path: '/category/:categoryId',
-        path: '/category/:name',
+        path: "/activity/:actvityId",
+        // path: '/category/:name',
         element: AuthService.loggedIn() ? <CategoryDetail /> : <Login />,
       },
       {
-        path: '/slideshow',
+        path: "/slideshow",
         element: <Slideshow />,
       },
       {
-        path: '/log',
+        path: "/log",
         element: AuthService.loggedIn() ? <Log /> : <Login />,
       },
     ],
   },
   // Catch-all route for handling unknown routes (404)
   {
-    path: '*',
+    path: "*",
     element: <ErrorPage />,
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <RouterProvider router={router} />
 );

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { GET_USER_ACTIVITIES } from '../../utils/queries';
+import { GET_USER_ACTIVITIES } from '../../utils/queries'; // Update this path
 import AuthService from '../../utils/auth';
 import { DELETE_ACTIVITY } from '../../utils/mutations';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchActivities } from '../../Reducers/actions';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 
 const UserActivities = () => {
   const [userProfile, setUserProfile] = useState(null);
@@ -75,7 +76,9 @@ const UserActivities = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Goal</TableCell>
+              <TableCell>Category Name</TableCell>
               <TableCell>Action</TableCell>
+              <TableCell>Track Category</TableCell> {/* Add the "Track Category" column */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,6 +86,7 @@ const UserActivities = () => {
               <TableRow key={activity.name}>
                 <TableCell>{activity.name}</TableCell>
                 <TableCell>{activity.goal}</TableCell>
+                <TableCell>{activity.category.name}</TableCell> {/* Display category name */}
                 <TableCell>
                   <Button
                     variant="contained"
@@ -91,6 +95,13 @@ const UserActivities = () => {
                   >
                     Delete
                   </Button>
+                </TableCell>
+                <TableCell>
+                  <Link to={`/activity/${activity._id}`}>
+                    <Button variant="contained" color="primary">
+                      Track Category
+                    </Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

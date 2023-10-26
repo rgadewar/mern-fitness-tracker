@@ -4,6 +4,7 @@ const { getWeeklyProgress } = require("../utils/weeklyProgress");
 const { ActivityName } = require("./typeDefs");
 const moment = require("moment");
 
+
 const resolvers = {
   Query: {
     user: async (parent, { userId }) => {
@@ -42,6 +43,30 @@ const resolvers = {
       }
     },
 
+    getCategoryForActivity: async (_, { activityId }) => {
+      try {
+        // First, retrieve the activity based on the provided activityId
+        const activity = await Activity.findById(activityId);
+    
+        if (!activity) {
+          return null; // Handle the case where the activity is not found.
+        }
+    
+        // Check if the activity has a category
+        if (activity.category) {
+          return activity.category;
+        } else {
+          return null; // Handle the case where the activity has no category.
+        }
+      } catch (error) {
+        console.error('Error while fetching data:', error);
+        return null; // Handle any errors during the data retrieval.
+      }
+    },
+    
+    
+    
+    
     categories: async () => {
       try {
         const categories = await Category.find();
@@ -67,62 +92,60 @@ const resolvers = {
     weeklyProgress: async (parent, args, context) => {
       // Ensure the user is authenticated (you can use your authentication middleware here)
       if (!context.user) {
-        throw AuthenticationError;
+        throw new AuthenticationError('User not authenticated');
       }
-
+    
       try {
         const userId = args.userId;
-        const activityName = args.name;
-
+        const activityId = args.activityId;
+    
         // Call the getWeeklyProgress function to calculate the weekly progress
-        const weeklyProgress = await getWeeklyProgress(userId, activityName);
+        const weeklyProgress = await getWeeklyProgress(userId, activityId);
         console.log("weeklyProgress", weeklyProgress);
-
+    
         return weeklyProgress;
       } catch (error) {
         throw new Error("Error fetching weekly progress: " + error.message);
       }
     },
-
+    
     getDailyAchievements: async (
       parent,
-      { userId, name, startDate, endDate }
+      { userId, activityId, startDate, endDate }
     ) => {
       try {
-        const activities = await Activity.find({ user: userId, name });
-
-        if (!activities || activities.length === 0) {
-          throw new Error("No activities found with the provided name");
-        }
-
-        const filteredAchievements = [];
-
-        activities.forEach((activity) => {
-          const achievements = activity.dailyAchievements.filter(
-            (achievement) => {
-              const achievementDate = new Date(achievement.date);
-              return (
-                achievementDate >= new Date(startDate) &&
-                achievementDate <= new Date(endDate)
-              );
-            }
-          );
-
-          // Convert Unix timestamps to "YYYY-MM-DD" format
-          const formattedAchievements = achievements.map((achievement) => ({
-            date: new Date(achievement.date).toISOString().split("T")[0],
-            value: achievement.value,
-          }));
-
-          filteredAchievements.push(...formattedAchievements);
+        const activity = await Activity.findOne({
+          user: userId,
+          _id: activityId,
         });
-
-        return filteredAchievements;
+    
+        if (!activity) {
+          throw new Error("Activity not found");
+        }
+    
+        const filteredAchievements = activity.dailyAchievements.filter(
+          (achievement) => {
+            const achievementDate = new Date(achievement.date);
+            return (
+              achievementDate >= new Date(startDate) &&
+              achievementDate <= new Date(endDate)
+            );
+          }
+        );
+    
+        // Convert Unix timestamps to "YYYY-MM-DD" format
+        const formattedAchievements = filteredAchievements.map((achievement) => ({
+          date: new Date(achievement.date).toISOString().split("T")[0],
+          value: achievement.value,
+        }));
+    
+        return formattedAchievements;
       } catch (error) {
         console.error("Error fetching daily achievements:", error);
         throw new Error("Server error");
       }
     },
+    
 
     activityIdByName: async (_, { userId, name }) => {
       // Check if the user with the provided userId exists
@@ -145,11 +168,15 @@ const resolvers = {
           throw new AuthenticationError("Not logged in");
         }
     
-        const user = await User.findById(userId).populate('activities');
+        const user = await User.findById(userId).populate({
+          path: 'activities',
+          populate: {
+            path: 'category',
+            model: 'Category',
+          },
+        });
     
-        // Check if the user and user.activities are defined
         if (!user || !user.activities) {
-          // Handle the case where user or activities are undefined
           return null;
         }
     
@@ -162,16 +189,17 @@ const resolvers = {
       }
     },
     
+    
 
-    getUserWeeklyGoal: async (_, { userId, name }, context) => {
+    getUserWeeklyGoal: async (_, { userId, activityId }, context) => {
       try {
-        // Query the Activity table to find the activity by name and user ID
-        const activity = await Activity.findOne({ user: userId, name });
-
+        // Query the Activity table to find the activity by user ID and activity ID
+        const activity = await Activity.findOne({ user: userId, _id: activityId });
+    
         if (!activity) {
           throw new Error("Activity not found");
         }
-
+    
         return activity.goal; // Assuming that the goal is the weekly goal
       } catch (error) {
         throw new Error("Failed to fetch user weekly goal: " + error.message);
@@ -250,71 +278,67 @@ const resolvers = {
     },
 
     updateDailyAchievement: async (parent, args, context) => {
+      console.log("args", args);
       if (!context.user) {
         throw new AuthenticationError('Not logged in');
       }
-
+    
       try {
-        const { name, date, value, _id } = args;
-
-        if (!name) {
+        const { date, value, _id, category } = args;
+    
+        if ( !date || value === undefined) {
           return {
             success: false,
-            message: 'Name is required',
+            message: 'Invalid input data',
           };
         }
-
-        let activity = await Activity.findById(_id);
-
+    
+        let activity = _id
+          ? await Activity.findById(_id)
+          : await Activity.findOne({ user: context.user._id });
+    
         if (!activity) {
-          activity = await Activity.findOne({
-            name,
+          activity = new Activity({
+           
+            goal: 0, // You may want to set a default goal here.
             user: context.user._id,
           });
-
-          if (!activity) {
-            activity = new Activity({
-              name: name,
-              goal: 0,
-              user: context.user._id,
-            });
-
-            console.log(
-              `Created a new activity: ${name} for user ID ${context.user._id}`
-            );
-          }
+    
+          console.log(
+            `Created a new activity: for user ID ${context.user._id}`
+          );
         }
-
+    
         const existingAchievement = activity.dailyAchievements.find(
           (achievement) => achievement.date.toISOString() === date
         );
-
+    
         if (!existingAchievement) {
           activity.dailyAchievements.push({
             date: new Date(date),
             value,
-            name: name,
+            
           });
-
+    
           console.log('Created a new daily achievement:', date);
         } else {
           existingAchievement.value = value;
           console.log('Updated daily achievement:', date);
         }
-
-        activity.user = context.user._id;
-
+    
+        activity.category = category; // Set the category for the activity.
+    
         const savedActivity = await activity.save();
-
+    
         // Update the user's activities with the newly created or updated activity ID
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $addToSet: { activities: activity._id } }, // Use $addToSet to avoid duplicate entries
           { new: true }
         );
-
+    
         console.log('Activity saved successfully:', savedActivity);
-
+    
         return {
           success: true,
           message: 'Daily achievement updated successfully',
@@ -327,7 +351,7 @@ const resolvers = {
         };
       }
     },
-
+    
     setGoal: async (_, { userId, activityId, goal }) => {
       try {
         // First, find the user by their ID
@@ -360,16 +384,27 @@ const resolvers = {
       if (!context.user) {
         throw new AuthenticationError("Not logged in");
       }
-    
+    console.log("args", args)
       try {
-        const { name, goal } = args.input;
+        const { name, categoryID, goal } = args.input;
         const userId = context.user._id;
     
-        // Check if an activity with the given name already exists for the user
-        let activity = await Activity.findOne({ name, user: userId });
+        // Check if a category with the given ID exists
+        const category = await Category.findById(categoryID);
+    
+        if (!category) {
+          throw new Error("Category not found");
+        }
+    
+        // Check if an activity with the given name, category, and user ID already exists
+        let activity = await Activity.findOne({
+          name,
+          category: categoryID,
+          user: userId,
+        });
     
         if (activity) {
-          // Activity with the same name already exists; update its goal
+          // Activity with the same name, category, and user ID already exists; update its goal
           activity.goal = goal;
     
           // Save the updated activity to the database
@@ -388,8 +423,9 @@ const resolvers = {
         // Create a new activity if it doesn't exist
         activity = new Activity({
           name,
+          category: categoryID, // Category ID as a string
           goal,
-          user: userId,
+          user: userId, // Set the user ID from the context
           dailyAchievements: [], // You can initialize with an empty array
         });
     
@@ -403,12 +439,16 @@ const resolvers = {
           { new: true }
         );
     
+        // Include the category name in the response
+        createdActivity.category = category;
+    
         return createdActivity;
       } catch (error) {
         throw new Error("Failed to create/update the activity: " + error.message);
       }
     },
-
+    
+  
     deleteActivity: async (_, { activityId }, context) => {
       try {
         if (!context.user) {

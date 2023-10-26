@@ -17,13 +17,15 @@ const getCurrentWeekDates = () => {
 };
 
 // Function to fetch and calculate weekly progress for a specific user's activity with a specific category
-const getWeeklyProgress = async (userId, categoryName) => {
+const getWeeklyProgress = async (userId, activityId) => {
   try {
+    console.log("Here", userId)
+    console.log("Here", activityId)
     const [startDate, endDate] = getCurrentWeekDates();
     // Find the user's activity for the current week with a specific category
     const activity = await Activity.findOne({
       user: userId,
-      name: categoryName,
+      _id: activityId,
       dailyAchievements: {
         $elemMatch: {
           // 'categoryName': categoryName,

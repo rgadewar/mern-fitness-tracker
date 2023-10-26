@@ -17,15 +17,16 @@ import "../components/Category/CategoryDetails.css";
 const CategoryDetail = () => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
-  const [categoryName, setCategoryName] = useState("");
-  const { name } = useParams();
+  const [ActivityID, setActivityID] = useState("");
+  const { actvityId } = useParams();
 
   useEffect(() => {
-    if (name) {
-      setCategoryName(name);
+    if (actvityId) {
+      setActivityID(actvityId);
     }
-  }, [name]);
+  }, [actvityId]);
 
+  // console.log("actvityId", ActivityID)
   const userProfile = AuthService.getProfile();
   // Inside your authentication logic, after a new user logs in
   const handleNewUserLogin = (userProfile) => {
@@ -43,7 +44,7 @@ const CategoryDetail = () => {
   const { data: progressData } = useQuery(GET_WEEKLY_PROGRESS, {
     variables: {
       userId: userProfile?.data._id,
-      name: categoryName ? categoryName : null,
+      activityId: ActivityID ? ActivityID : null,
     },
     onCompleted: (data) => {
       console.log("Data from GET_WEEKLY_PROGRESS query:", data); // Log the data
@@ -56,7 +57,7 @@ const CategoryDetail = () => {
     {
       variables: {
         userId: userProfile?.data._id,
-        name: categoryName ? categoryName : null,
+        activityId: ActivityID ? ActivityID : null,
       },
       onCompleted: (data) => {
         if (data && data.setWeekGoal !== null) {
@@ -81,14 +82,14 @@ const CategoryDetail = () => {
 
   return (
     <div className="calendar-container">
-      <h1>{categoryName}</h1>
+      <h1>{ActivityID}</h1>
       <p>Your Progress: {state.weeklyProgress}</p>
 
       <div>
         <label htmlFor="weekGoal">Weekly Goal: {state.weekGoal} </label>
       </div>
 
-      <CalendarComponent onSave={handleCalendarSave} name={categoryName} />
+      <CalendarComponent onSave={handleCalendarSave} ActivityID={ActivityID} />
       {/* <table>
         <thead>
           <tr>

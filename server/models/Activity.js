@@ -4,8 +4,8 @@ const activitySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    enum: ["Swimming", "Running", "Biking", "Walking"],
-    default: "Running", // Set a default name, for example, "Running"
+    // enum: ["Swimming", "Running", "Biking", "Walking"],
+    // default: "Running", // Set a default name, for example, "Running"
   },
   goal: {
     type: Number,
@@ -21,15 +21,20 @@ const activitySchema = new mongoose.Schema({
         type: Number,
         default: 0,
       },
-      name: {
-        type: String,
-        required: true,
-      },
+      // name: {
+      //   type: String,
+      //   required: true,
+      // },
     },
   ],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
     required: true,
   },
 });

@@ -57,10 +57,11 @@ const Home = () => {
             <br />
             <br />
             <br />
-            <UserActivities userActivities={userActivities} />
+            {/* <UserActivities userActivities={userActivities} /> */}
           </Grid>
           <Grid item xs={6}>
-            <div className="category-list">
+          <UserActivities userActivities={userActivities} />
+            {/* <div className="category-list">
               {userProfile ? (
                 <Typography variant="h4">Welcome, {userProfile.data.email}</Typography>
               ) : (
@@ -82,14 +83,14 @@ const Home = () => {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button component="a" href={`/category/${category.name}`} variant="contained" color="primary">
+                      <Button component="a"  href={`/category/${category._id}`} variant="contained" color="primary">
                         Track Category
                       </Button>
                     </CardActions>
                   </Card>
                 ))
               )}
-            </div>
+            </div> */}
           </Grid>
         </Grid>
       </div>

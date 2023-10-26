@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import React, { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-import './CalenderComponent.css'; // Import the CSS file
-import { useMutation } from '@apollo/client';
-import { UPDATE_DAILY_ACHIEVEMENT } from '../../utils/mutations';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { GET_WEEKLY_PROGRESS } from '../../utils/queries';
-import AuthService from '../../utils/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateWeeklyProgress, updateActivity } from '../../Reducers/actions';
-import { useCalendarFunctions } from './CalendarUtilFunctions';
+import "./CalenderComponent.css"; // Import the CSS file
+import { useMutation } from "@apollo/client";
+import { UPDATE_DAILY_ACHIEVEMENT } from "../../utils/mutations";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import {
+  GET_WEEKLY_PROGRESS,
+  GET_CATEGORY_FOR_ACTIVITY,
+} from "../../utils/queries";
+import AuthService from "../../utils/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { updateWeeklyProgress, updateActivity } from "../../Reducers/actions";
+import { useCalendarFunctions } from "./CalendarUtilFunctions";
 
-const CalendarComponent = ({ onSave, name }) => {
+const CalendarComponent = ({ onSave, ActivityID : activityID }) => {
   const [date, setDate] = useState(new Date());
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [entryData, setEntryData] = useState({});
   const [goal, setGoal] = useState(100); // Initialize goal with 0
@@ -26,10 +29,28 @@ const CalendarComponent = ({ onSave, name }) => {
       const userProfile = AuthService.getProfile();
       setUserProfile(userProfile);
     } else {
-      console.log('User is not logged in');
+      console.log("User is not logged in");
     }
   }, []);
 
+
+  const [category, setCategory] = useState(null);
+
+  const { data, loading, error } = useQuery(GET_CATEGORY_FOR_ACTIVITY, {
+    variables: { activityId: activityID },
+  });
+
+  useEffect(() => {
+    if (!loading && data) {
+      const categoryId = data.getCategoryForActivity;
+      if (categoryId) {
+        setCategory(categoryId); // Set the category in the component's state.
+        console.log('Category ID:', categoryId);
+      } else {
+        console.log('Category ID not found');
+      }
+    }
+  }, [data, loading]);
  
 
   const [updateDailyAchievement] = useMutation(UPDATE_DAILY_ACHIEVEMENT);
@@ -70,16 +91,17 @@ const CalendarComponent = ({ onSave, name }) => {
 
       if (selectedDate >= firstDayOfWeek && selectedDate <= lastDayOfWeek) {
         if (!AuthService.loggedIn()) {
-          console.error('User not authenticated.');
+          console.error("User not authenticated.");
           return;
         }
         try {
           const response = await updateDailyAchievement({
             variables: {
-              name: name,
+              
               date: selectedDate.toISOString(),
               value: parseFloat(value),
               userId: userProfile.data._id,
+              category: category._id,
             },
           });
           if (response.data && response.data.updateDailyAchievement) {
@@ -94,7 +116,7 @@ const CalendarComponent = ({ onSave, name }) => {
 
             onSave({ date: selectedDate, value: parseFloat(value) });
             setDate(new Date());
-            setValue('');
+            setValue("");
             setSelectedDate(null);
 
             const newDailyAchievement = {
@@ -105,32 +127,32 @@ const CalendarComponent = ({ onSave, name }) => {
 
             dispatch(updateActivity(newDailyAchievement));
             dispatch({
-              type: 'UPDATE_WEEKLY_PROGRESS',
+              type: "UPDATE_WEEKLY_PROGRESS",
               payload: parseFloat(value),
             });
           } else {
             console.error(
-              'Daily achievement update failed:',
+              "Daily achievement update failed:",
               response.data?.updateDailyAchievement?.message
             );
           }
         } catch (error) {
           console.error(
-            'An error occurred while updating daily achievement:',
+            "An error occurred while updating daily achievement:",
             error
           );
         }
       } else {
-        console.error('Selected date is not within the current week.');
+        console.error("Selected date is not within the current week.");
       }
     } else {
-      console.error('Selected date is not defined.');
+      console.error("Selected date is not defined.");
     }
   };
 
   const handleSelectDate = (date) => {
     setSelectedDate(date);
-    setValue(entryData[date.toDateString()]?.progress || '');
+    setValue(entryData[date.toDateString()]?.progress || "");
   };
 
   const calculateWeeklyProgress = () => {
@@ -144,7 +166,7 @@ const CalendarComponent = ({ onSave, name }) => {
   const weeklyProgress = calculateWeeklyProgress();
 
   const tileClassName = ({ date, view }) => {
-    if (view === 'month') {
+    if (view === "month") {
       const currentDate = new Date();
       const firstDayOfWeek = new Date(
         currentDate.getFullYear(),
@@ -158,10 +180,10 @@ const CalendarComponent = ({ onSave, name }) => {
       );
 
       if (date >= firstDayOfWeek && date <= lastDayOfWeek) {
-        return 'highlighted-week';
+        return "highlighted-week";
       }
     }
-    return '';
+    return "";
   };
 
   return (
@@ -169,7 +191,9 @@ const CalendarComponent = ({ onSave, name }) => {
       {userProfile ? (
         <div>
           <h2>Calendar</h2>
-          <p style={{ color: 'blue' }}>Please click the date to track the activity for the current week</p>
+          <p style={{ color: "blue" }}>
+            Please click the date to track the activity for the current week
+          </p>
           <div>
             <Calendar
               onChange={handleDateChange}
@@ -200,7 +224,11 @@ const CalendarComponent = ({ onSave, name }) => {
             <div>
               <p>Goal: {weekGoal}</p>
               <p>Your Progress: {state.weeklyProgress}</p>
-              <progress className="custom-progress" max={weekGoal} value={state.weeklyProgress} />
+              <progress
+                className="custom-progress"
+                max={weekGoal}
+                value={state.weeklyProgress}
+              />
             </div>
           </div>
         </div>

@@ -25,8 +25,8 @@ export const LOGIN_USER = gql`
 `;
 
 export const UPDATE_DAILY_ACHIEVEMENT = gql`
-mutation UpdateDailyAchievement($name: String!, $date: String!, $value: Float!, $userId: ID!) {
-  updateDailyAchievement(name: $name, date: $date, value: $value, userId: $userId) {
+mutation UpdateDailyAchievement($date: String!, $value: Float!, $userId: ID!,  $category: ID!) {
+  updateDailyAchievement(date: $date, value: $value, userId: $userId, category: $category) {
     message
     success
   }
@@ -45,13 +45,19 @@ mutation SetGoal($userId: ID!, $activityId: ID!, $goal: Float!) {
 `;
 
 export const CREATE_NEW_ACTIVITY = gql`
-mutation CreateNewActivity($input: CreateActivityInput!) {
+mutation CreateActivity($input: CreateActivityInput!) {
   createActivity(input: $input) {
-    goal
     name
+    category {
+      _id
+      name
+    }
+    goal
   }
 }
+
 `;
+
 
 export const DELETE_ACTIVITY = gql`
 mutation DeleteActivity($activityId: ID!) {

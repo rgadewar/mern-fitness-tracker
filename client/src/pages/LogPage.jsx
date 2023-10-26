@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AuthService from "../utils/auth";
 import { useQuery } from "@apollo/client";
-import { GetDailyAchievements, GET_CATEGORIES } from "../utils/queries.js"; // Import the query for fetching categories
+import {
+  GetDailyAchievements,
+  GET_CATEGORIES,
+  GET_USER_ACTIVITIES,
+} from "../utils/queries.js"; // Import the query for fetching categories
 import DatePickerComponent from "../components/DatePicker";
 import MyLineChart from "../components/ChartComponent"; // Import your chart component
 import {
@@ -24,22 +28,34 @@ function ShowLogPage() {
   const [searchResults, setSearchResults] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Biking");
   const [pageLoaded, setPageLoaded] = useState(true);
+  const [selectedActivity, setSelectedActivity] = useState(""); // Define selectedActivity state
 
   const { loading, error, data } = useQuery(GetDailyAchievements, {
     variables: {
       userId: userProfile?.data?._id || "",
-      name: selectedCategory, // Use selectedCategory instead of 'Biking'
+      activityId: selectedActivity, // Use selectedActivity (activity ID) instead of selectedCategory
       startDate: startDate ? startDate.toISOString().split("T")[0] : "",
       endDate: endDate ? endDate.toISOString().split("T")[0] : "",
     },
   });
+  
 
   // Fetch categories using Apollo Client
-  const {
-    loading: categoryLoading,
-    error: categoryError,
-    data: categoryData,
-  } = useQuery(GET_CATEGORIES);
+  const { loading: categoryLoading, data: categoryData } =
+    useQuery(GET_CATEGORIES);
+
+  // Fetch activities using Apollo Client
+  const { loading: activityLoading, data: activityData } = useQuery(
+    GET_USER_ACTIVITIES,
+    {
+      variables: {
+        userId: userProfile?.data?._id || "",
+      },
+    }
+  );
+  // Log the loading state and data
+  console.log("Loading:", activityLoading);
+  console.log("Data:", activityData);
 
   useEffect(() => {
     if (AuthService.loggedIn()) {
@@ -102,22 +118,16 @@ function ShowLogPage() {
         <Grid item xs={12} sm={6} md={3}>
           <FormControl fullWidth>
             <br />
-            <InputLabel>Select Category</InputLabel>
+            <InputLabel>Select Activity</InputLabel>
             <Select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              value={selectedActivity}
+              onChange={(e) => setSelectedActivity(e.target.value)}
             >
-              {/* <MenuItem value="Biking">Biking</MenuItem>
-              <MenuItem value="Running">Running</MenuItem>
-              <MenuItem value="Walking">Walking</MenuItem>
-              <MenuItem value="Swimming">Swimming</MenuItem> */}
-              {categoryData?.categories
-                .filter((category) => category.name !== "All") // Exclude the 'All' category
-                .map((category) => (
-                  <MenuItem key={category._id} value={category.name}>
-                    {category.name}
-                  </MenuItem>
-                ))}
+              {activityData?.getUserActivities.activities.map((activity) => (
+                <MenuItem key={activity._id} value={activity._id}>
+                  {activity.name} {/* Display activity name */}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
