@@ -62,7 +62,7 @@ type Query {
   me: User
   weeklyProgress(userId: ID!, activityId: ID!): Int
   activityByUserId(userId: ID!): Activity
-  getDailyAchievements(userId: ID!, activityId: ID!, startDate: String!, endDate: String!): [DailyAchievement]
+  getDailyAchievements(userId: ID!, name: String!, startDate: String!, endDate: String!): [DailyAchievement]
   activityIdByName(userId: ID!, name: String!): ID
   getTrackedActivitiesForCurrentWeek: [Activity]
   getUserWeeklyGoal(userId: ID!, activityId: ID!): Int
